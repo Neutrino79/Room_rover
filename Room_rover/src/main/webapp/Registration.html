@@ -1,38 +1,85 @@
 <!DOCTYPE html>
 <html>
-	
 <head>
-	  <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="">
     <title>Registration Page</title>
-  
 </head>
 <body>
     <h2>Register as a Student or Hostel Owner</h2>
-     <div class="registration">
-    <form action="/Room_rover/Register" method="post">
-        <label for="user_type">Select User Type:</label>
-        <select name="user_type" id="user_type">
-            <option value="student">Student</option>
-            <option value="owner">Hostel Owner</option>
-        </select>
-        <br><br>
-        <label for="name">Full Name:</label>
-        <input type="text" name="name" id="name" required>
-        <br><br>
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required>
-        <br><br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" required>
-        <br><br>
-        <label for="confirm_password">Confirm Password:</label>
-        <input type="password" name="confirm_password" id="confirm_password" required>
-        <br><br>
-        <label for="contact">Contact Number:</label>
-        <input type="tel" name="contact" id="contact" required>
-        <br><br>
-        <input type="submit" value="Register">
-    </form>
-     </div>
+    <div class="registration">
+        <form action="/Room_rover/Register" method="post" onsubmit="return validateForm()">
+            <label for="user_type">Select User Type:</label>
+            <select name="user_type" id="user_type">
+                <option value="student">Student</option>
+                <option value="owner">Hostel Owner</option>
+            </select>
+            <br><br>
+            <label for="name">Full Name:</label>
+            <input type="text" name="name" id="name" required>
+            <br><br>
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+            <br><br>
+            <label for="contact">Contact Number:</label>
+            <input type="tel" name="contact" id="contact" required>
+            <br><br>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" name="dob" id="dob" required>
+            <br><br>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            <br><br>
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" name="confirm_password" id="confirm_password" required>
+            <br><br>
+            <span id="error_message" style="color: red;"></span>
+            
+            <input type="submit" value="Register">
+            
+        </form>
+    </div>
+    
+    <script>
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var contact = document.getElementById("contact").value;
+            var dob = document.getElementById("dob").value;
+            var password = document.getElementById("password").value;
+            var confirm_password = document.getElementById("confirm_password").value;
+            var error_message = document.getElementById("error_message");
+
+            if (name === "" || email === "" || contact === "" || dob === "" || password === "" || confirm_password === "") {
+                error_message.textContent = "All fields are required.";
+                return false;
+            }
+
+            if (!isValidEmail(email)) {
+                error_message.textContent = "Invalid email address.";
+                return false;
+            }
+
+            if (contact.length !== 10) {
+                error_message.textContent = "Contact number must be 10 characters long.";
+                return false;
+            }
+
+            if (password !== confirm_password) {
+                error_message.textContent = "Passwords do not match.";
+                return false;
+            }
+
+            // You can add more validation here if needed.
+
+            // If all checks pass, the form will be submitted.
+            return true;
+        }
+
+        function isValidEmail(email) {
+            // You can implement a more robust email validation regex if needed.
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailPattern.test(email);
+        }
+    </script>
 </body>
 </html>
