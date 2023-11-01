@@ -115,8 +115,7 @@ public class Register extends HttpServlet {
 
                     if (rowsInserted > 0) 
                     {
-                        // Registration is successful, redirect to the login page with a success message
-                       // response.sendRedirect("login.jsp?registrationSuccess=1");
+                    	  // Registration successfull,
                     	out.println("Registratrion successfull");
                     } 
                     else 
