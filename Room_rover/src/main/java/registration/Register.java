@@ -15,6 +15,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import com.ConnInit.*;
+import com.mysql.cj.xdevapi.Statement;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -37,6 +39,7 @@ public class Register extends HttpServlet {
         	 conn= DBConn.getConnection();
             if (conn != null) 
             {
+            	out.print(conn);
                 out.println("Database Connection Successful");
                 String name = request.getParameter("name");
                 String email = request.getParameter("email");
@@ -52,12 +55,15 @@ public class Register extends HttpServlet {
                 try 
                 {
                 	int rowsInserted=0;
+                	
                 	if("student".equals(userType))
                 	{
+                		ResultSet checkRs = null;
+                    	PreparedStatement checkPs = null;
                 		String checkQuery = "SELECT * FROM Students WHERE email = ?";
-                        PreparedStatement checkPs = conn.prepareStatement(checkQuery);
-                        checkPs.setString(1, email);
-                        ResultSet checkRs = checkPs.executeQuery();
+                	    checkPs = conn.prepareStatement(checkQuery);
+                	    checkPs.setString(1, email);
+                	    checkRs = checkPs.executeQuery();
 
                         if (checkRs.next()) 
                         {
@@ -113,15 +119,17 @@ public class Register extends HttpServlet {
                         }
                 	}
 
+                	
+                	
                     if (rowsInserted > 0) 
                     {
-                    	  // Registration successfull,
-                    	out.println("Registratrion successfull");
+                    	  // Registration successful,
+                    	out.println("\nRegistratrion successfull");
                     } 
                     else 
                     {
                         // Registration failed, set an error message
-                        out.println("Registration failed. Please try again.");
+                        out.println("\nRegistration failed. Please try again.");
                     }
                     
                   
@@ -130,18 +138,18 @@ public class Register extends HttpServlet {
                 catch (SQLException | ParseException e) 
                 {
                     e.printStackTrace();
-                    out.println("Registration failed due to a database error: " + e.getMessage());
+                    out.println("\nRegistration failed due to a database error: " + e.getMessage());
                 } 
             }
             else 
             {
-                out.println("Database Connection Failed");
+                out.println("\nDatabase Connection Failed");
             }
         } 
         catch (Exception e) 
         {
             e.printStackTrace();
-            out.println("An error occurred: " + e.getMessage());
+            out.println("\nAn error occurred: " + e.getMessage());
         } 
         
         finally 
@@ -158,5 +166,11 @@ public class Register extends HttpServlet {
                 }
             }
         }
+	}
+
+
+	private ResultSet executeQuery(String checkQuery) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
