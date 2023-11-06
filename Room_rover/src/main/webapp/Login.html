@@ -4,21 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <style>
+        /* CSS animation for success message */
+        .success-animation {
+            animation: success 3s ease-in-out;
+            display: none;
+        }
+
+        @keyframes success {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* CSS animation for failure message */
+        .failure-animation {
+            animation: failure 3s ease-in-out;
+            display: none;
+        }
+
+        @keyframes failure {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
     <title>Room Rover Login</title>
 </head>
 <body>
-	
     <div class="login-container">
         <h1>Room Rover Login</h1>
         <form action="/Room_rover/login" id="login-form" method="post" >
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="Enter your email" required>
 
-            <label for="password">Password:</label>
+            <label for "password">Password:</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
             <label for="role">Role:</label>
-            <select id="role" name="role">x
+            <select id="role" name="role">
                 <option value="student">Student</option>
                 <option value="owner">Hostel Owner</option>
                 <option value="admin">Admin</option>
@@ -27,6 +64,32 @@
             <button type="submit">Login</button>
         </form>
         <a href="forgot_password.html">Forgot Password?</a>
+
+        <!-- Success message -->
+        <div id="success-message" class="success-animation">
+            <p>Login Successful</p>
+        </div>
+
+        <!-- Failure message -->
+        <div id="failure-message" class="failure-animation">
+            <p>Login Failed</p>
+        </div>
     </div>
+
+    <script>
+        // Function to show success animation and message
+        function showSuccessAnimation() {
+        $("#success-message").show("blind", {}, 1000);
+        }
+
+    // Function to show failure animation and message
+    function showFailureAnimation() {
+        $("#failure-message").show("blind", {}, 1000);
+     }
+
+        // This is just an example; replace with actual logic in your servlet
+        // You can call these functions based on the actual login result in your servlet.
+        // For example, call showSuccessAnimation() on successful login and showFailureAnimation() on failed login.
+    </script>
 </body>
 </html>

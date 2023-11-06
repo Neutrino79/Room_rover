@@ -11,45 +11,38 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import jakarta.servlet.http.HttpSession;
+
 
 import com.ConnInit.DBConn;
+
 @WebServlet("/login")
-public class login extends HttpServlet 
-{
+public class login extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         Connection conn = null;
+        
         PrintWriter out = response.getWriter();
-        System.out.print("check");
-        try 
-        {
+        try {
+        	
             conn = DBConn.getConnection();
-            if (conn != null) 
-            {
+
+            if (conn != null) {
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
                 String role = request.getParameter("role");
-                
+
                 try {
-                	
                     String selectQuery = "SELECT * FROM ";
                     String userTable;
 
-                    if ("student".equals(role)) 
-                    {
+                    if ("student".equals(role)) {
                         userTable = "Students";
-                    } 
-                    else if ("owner".equals(role)) 
-                    {
+                    } else if ("owner".equals(role)) {
                         userTable = "HostelOwners";
-                    } 
-                    else 
-                    {
+                    } else {
                         // Handle invalid role
                         out.println("Invalid role");
                         return;
@@ -62,8 +55,7 @@ public class login extends HttpServlet
 
                     ResultSet checkRs = selectPs.executeQuery();
 
-                    if (checkRs.next()) 
-                    {
+                    if (checkRs.next()) {
                         // User email exists in the database, now check the password
                         selectQuery = "SELECT * FROM " + userTable + " WHERE email = ? AND password = ?";
                         selectPs = conn.prepareStatement(selectQuery);
@@ -72,46 +64,49 @@ public class login extends HttpServlet
 
                         checkRs = selectPs.executeQuery();
 
-                        if (checkRs.next()) 
-                        {
+                        if (checkRs.next()) {
+                            // Login is successful
                             out.println("Login Successful");
-                        } 
-                        else 
-                        {
+                            out.println("<script>showSuccessAnimation();</script>");// JavaScript to show success animation
+                            HttpSession session = request.getSession();
+                            session.setAttribute("email", email);
+
+                            if("student".equals(role))
+                            		{
+                            			out.println("<script>window.location.replace('/Room_rover/stud_dashboard.html');</script>");
+                            		}
+                            else if("owner".equals(role))
+                            {
+                            	out.println("<script>window.location.replace('/Room_rover/owner_dashboard.html');</script>");
+                            }
+                        } else {
+                            // Login failed
                             out.println("Invalid email or password");
+                            out.println("<script>showFailureAnimation();</script>"); // JavaScript to show failure animation
                         }
-                    } 
-                    else 
-                    {
+                    } else {
                         out.println("Email doesn't exist in the database");
                     }
-                } 
-                catch (SQLException e) 
-                {
+                } catch (SQLException e) {
                     e.printStackTrace();
                     out.println("Login failed due to a database error: " + e.getMessage());
+                    
+                   // response.sendRedirect("/Room_rover/Login.html");
                 }
-            } 
-            else 
-            {
+            } else {
                 out.println("Database Connection Failed");
             }
-        } 
-        catch (Exception e) 
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             out.println("An error occurred: " + e.getMessage());
-        } 
-        finally 
-        {
-                try 
-                {
-                    conn.close();
-                } 
-                catch (SQLException e) 
-                {
-                    e.printStackTrace();
-                }
-            }
+        } finally {
+        	try {
+        	    if (conn != null) {
+        	        conn.close();
+        	    }
+        	} catch (SQLException e) {
+        	    e.printStackTrace();
+        	}
+        }
     }
 }

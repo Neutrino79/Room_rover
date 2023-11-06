@@ -19,4 +19,44 @@
     <servlet-name>Register</servlet-name>
     <url-pattern>/Register</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Stud_dashboard</display-name>
+    <servlet-name>Stud_dashboard</servlet-name>
+    <servlet-class>s_dashboard.Stud_dashboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Stud_dashboard</servlet-name>
+    <url-pattern>/Stud_dashboard</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>S1</display-name>
+    <servlet-name>S1</servlet-name>
+    <servlet-class>dashboard.S1</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>S1</servlet-name>
+    <url-pattern>/S1</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Stud_Dashboard</display-name>
+    <servlet-name>Stud_Dashboard</servlet-name>
+    <servlet-class>dashboard.Stud_dashboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Stud_Dashboard</servlet-name>
+    <url-pattern>/Stud_Dashboard</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Owner_Dashboard</display-name>
+    <servlet-name>Owner_Dashboard</servlet-name>
+    <servlet-class>dashboard.Owner_Dashboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Owner_Dashboard</servlet-name>
+    <url-pattern>/Owner_Dashboard</url-pattern>
+  </servlet-mapping>
 </web-app>
