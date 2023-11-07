@@ -1,6 +1,7 @@
 package dashboard;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,11 @@ import java.sql.SQLException;
 
 import com.ConnInit.DBConn;
 
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024, // 1 MB
+    maxFileSize = 10 * 1024 * 1024,  // 10 MB
+    maxRequestSize = 20 * 1024 * 1024  // 20 MB
+    )
 @WebServlet("/AddHostel")
 public class Owner_Dashboard extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -28,8 +34,6 @@ public class Owner_Dashboard extends HttpServlet {
        // String email = (String) session.getAttribute("email"); 
         int ID =(int) session.getAttribute("ID");
 
-        
-        
         // Retrieve data from the form
         String hostelName = request.getParameter("hostelName");
         String location = request.getParameter("location");
@@ -37,7 +41,9 @@ public class Owner_Dashboard extends HttpServlet {
         String roomType = request.getParameter("roomType");
         int occupied = Integer.parseInt(request.getParameter("currentlyFilled"));
         double price = Double.parseDouble(request.getParameter("price"));
-        String amenities = request.getParameter("amenities");
+        String[] selectedAmenities = request.getParameterValues("amenities[]");
+        String amenitiesString = String.join(", ", selectedAmenities);
+
 
         // Calculate the total students that can live in the hostel
         int totalStudentsCanLive = 0;
@@ -61,12 +67,9 @@ public class Owner_Dashboard extends HttpServlet {
         }
 
         // Insert data into the database
-        
-        Connection conn=null;
-        try 
-        {
-            
-        	conn= DBConn.getConnection();
+        Connection conn = null;
+        try {
+            conn = DBConn.getConnection();
             String insertQuery = "INSERT INTO hostels (hostel_name, location, owner_id, total_rooms, room_type, occupied, Is_full, price, amenities, status, documents) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
@@ -78,13 +81,12 @@ public class Owner_Dashboard extends HttpServlet {
             preparedStatement.setInt(6, occupied);
             preparedStatement.setBoolean(7, isFull);
             preparedStatement.setDouble(8, price);
-            preparedStatement.setString(9, amenities);
+            preparedStatement.setString(9, amenitiesString);
             preparedStatement.setString(10, "pending"); // Default status is "pending"
-            
+
             // Insert the document file as a BLOB
             InputStream documentStream = request.getPart("documents").getInputStream();
             preparedStatement.setBinaryStream(11, documentStream);
-            
 
             int rowsAffected = preparedStatement.executeUpdate();
 
@@ -93,7 +95,7 @@ public class Owner_Dashboard extends HttpServlet {
             } else {
                 out.println("Error: Hostel data could not be saved.");
             }
-            
+
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -102,14 +104,13 @@ public class Owner_Dashboard extends HttpServlet {
             out.println("Error Message: " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            out.println("Error: Exception occurred while saving hostel data. Please check your code and logs for more details.");
+            out.println("Error: Exception occurred while saving hostel data. Please check your code and logs for more details." + e.getMessage());
         } finally {
-        	try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -178,7 +178,7 @@
       <h2>Hostels</h2>
       <button id="addHostelButton" onclick="showAddHostelPopup()">+</button>
       <div id="addHostelPopup" class="popup">
-        <form action="/Room_rover/Owner_Dashboard" id="new_hostel" method="Post">
+        <form action="/Room_rover/Owner_Dashboard" id="new_hostel" method="Post" enctype="multipart/form-data">
           <div class="popup-header">
             <h2>Add New Hostel</h2>
           </div>
@@ -191,29 +191,30 @@
             <input type="text" id="location" name="location" required><br><br>
 
              <label for="documents">Documents:</label>
-            <input type="file" id="documents" name="documents" required><br><br>
+			<input type="file" id="documents" name="documents" required><br><br>
+
 
             <label for="price">Price:</label>
             <input type="number" id="price" name="price" required min="0" oninput="validity.valid||(value='');"><br><br>
 
-            <label for="amenities">Amenities:</label>
-            <ul class="amenities-list">
-              <li>
-                <label><input type="checkbox" name="amenity" value="wifi"> Wi-Fi</label>
-              </li>
-              <li>
-                <label><input type="checkbox" name="amenity" value="parking"> Parking</label>
-              </li>
-              <li>
-                <label><input type="checkbox" name="amenity" value="ac"> Air Conditioning</label>
-              </li>
-              <li>
-                <label><input type="checkbox" name="amenity" value="tv"> TV</label>
-              </li>
-              <li>
-                <label><input type="checkbox" name="amenity" value="laundry"> Laundry</label>
-              </li>
-            </ul>
+          <label for="amenities">Amenities:</label>
+		<ul class="amenities-list">
+  		<li>
+  		  <label><input type="checkbox" name="amenities[]" value="wifi"> Wi-Fi</label>
+ 		 </li>
+  		<li>
+  		  <label><input type="checkbox" name="amenities[]" value="parking"> Parking</label>
+ 		 </li>
+ 		 <li>
+ 		  <label><input type="checkbox" name="amenities[]" value="ac"> Air Conditioning</label>
+ 		 </li>
+ 		 <li>
+  		  <label><input type="checkbox" name="amenities[]" value="tv"> TV</label>
+ 		 </li>
+ 		 <li>
+ 		   <label><input type="checkbox" name="amenities[]" value="laundry"> Laundry</label>
+ 		 </li>
+		</ul>
 
             <label for="roomType">Room Type:</label>
             <select id="roomType" name="roomType" required>
