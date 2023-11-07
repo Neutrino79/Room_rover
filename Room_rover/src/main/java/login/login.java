@@ -35,19 +35,27 @@ public class login extends HttpServlet {
                 String role = request.getParameter("role");
 
                 try {
-                    String selectQuery = "SELECT * FROM ";
+                	String IDcol;
+                    
                     String userTable;
 
-                    if ("student".equals(role)) {
+                    if ("student".equals(role)) 
+                    {
                         userTable = "Students";
-                    } else if ("owner".equals(role)) {
+                        IDcol="student_id";
+                    } 
+                    else if ("owner".equals(role)) 
+                    {
                         userTable = "HostelOwners";
-                    } else {
+                        IDcol="owner_id";
+                    }
+                    else 
+                    {
                         // Handle invalid role
                         out.println("Invalid role");
                         return;
                     }
-
+                    String selectQuery = "SELECT * FROM ";
                     selectQuery += userTable + " WHERE email = ?";
 
                     PreparedStatement selectPs = conn.prepareStatement(selectQuery);
@@ -57,19 +65,23 @@ public class login extends HttpServlet {
 
                     if (checkRs.next()) {
                         // User email exists in the database, now check the password
-                        selectQuery = "SELECT * FROM " + userTable + " WHERE email = ? AND password = ?";
+                        selectQuery = "SELECT "+IDcol+" FROM " + userTable + " WHERE email = ? AND password = ?";
                         selectPs = conn.prepareStatement(selectQuery);
                         selectPs.setString(1, email);
                         selectPs.setString(2, password);
-
+                        
                         checkRs = selectPs.executeQuery();
-
+                        
+                        
                         if (checkRs.next()) {
                             // Login is successful
+                        	int ID = checkRs.getInt(IDcol);
                             out.println("Login Successful");
                             out.println("<script>showSuccessAnimation();</script>");// JavaScript to show success animation
                             HttpSession session = request.getSession();
                             session.setAttribute("email", email);
+                            
+                            session.setAttribute("ID", ID);
 
                             if("student".equals(role))
                             		{

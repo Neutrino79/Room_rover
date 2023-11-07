@@ -9,116 +9,287 @@
       padding: 0;
       background-color: #f2f2f2;
     }
-   .header {
+    .popup-message {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 999; /* Higher z-index value to bring it to the front */
+}
+
+
+    .header {
       align-items: center;
       padding: 20px;
       background-color: #333;
       color: #fff;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      display: block;
+      display: flex;
+      justify-content: space-between;
     }
-    .footer{
-		text-align: center;
+    .footer {
+      text-align: center;
       padding: 20px;
       background-color: #333;
       color: #fff;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      display: block;
       height: 85px;
-		
-	}
-    
-    .title{
-		display: inline-flex;
-		align-items: center;
-	    margin-left: 30%;
-	}
-
-
-    .profile {
-      float: inline-end;
-      margin-right: 100px;
-      display:inline-block;
-      margin-left: 300px;
-      
-      
     }
-
+    .title {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 500px;
+    }
+    .profile {
+      display: inline-block;
+      margin-left: 200px;
+    }
     .profile img {
-		
       width: 100px;
       height: 100px;
       border-radius: 50%;
       border: 3px solid #fff;
-      display: inline-block;
-      
     }
-
-
     .left {
-	  display: inline-block;
+      display: inline-block;
       width: 750px;
       height: 600px;
       background-color: #fff;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      margin-left:6%;
-      align-items: center;
+      margin-left: 100px;
     }
-    .leftTitle{
-		display: block;
-		text-align: center;
-		
-	}
-    
-    .Title{
-		margin-left: 50px;
-		
-	}
-
+    .leftTitle {
+      text-align: center;
+    }
     .right {
-	  display: inline-block;
-      background-color: #fff;
+      display: inline-block;
       width: 750px;
       height: 600px;
+      background-color: #fff;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      align-items: center;
+      position: relative;
+      border: 1px solid #fff;
     }
-    
-    .rightTitle{
-		display: block;
-		text-align: center;
-	}
-
-  
+    .rightTitle {
+      text-align: center;
+    }
+    /* Add button styles */
+    #addHostelButton {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    /* Add popup styles */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 48.3%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 950px;
+      height: 600px;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 0;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border: 1px solid #fff;
+      z-index: 1;
+    }
+    .popup-header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+    }
+    .popup-header h2 {
+      margin: 0;
+    }
+    .popup-content {
+      padding: 20px;
+    }
+    .popup-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+    }
+    .popup-footer button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+    .amenities-list {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      max-width: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 5px;
+      margin-left: 350px;
+    }
+    .amenities-list label {
+      display: block;
+      margin: 2px 0;
+      border: 1px solid #ddd;
+      padding: 5px;
+      font-size: 14px;
+    }
+    .amenities-list input[type="checkbox"] {
+      margin-right: 10px;
+      height: 12px;
+      width: 12px;
+    }
   </style>
 </head>
 <body>
+  
   <div class="header">
-	  <div class="title">
-		  <div class="Title"><h1>Welcome to Hostel Owner Dashboard</h1></div>
-		  <div class="profile">
-          <img src="profile_image.jpg" alt="Profile Image">
-          </div>
-	  </div>
-   
+    <div class="title">
+      <div class="Title"><h1>Welcome to Hostel Owner Dashboard</h1></div>
+      <div class="profile">
+        <img src="profile_image.jpg" alt="Profile Image">
+      </div>
+    </div>
   </div>
-
   <div class="left">
-	  <div class="leftTitle">
-		<h2>Booking requests</h2>
-	  </div>
+    <div class="leftTitle">
+      <h2>Booking requests</h2>
+    </div>
+  </div>
+  <div id="popupMessage" class="popup-message">
+  Saved successfully!
   </div>
   <div class="right">
-       <div class= "rightTitle">
-		 <h2>Hostels</h2>
-       </div>
- </div>
-<div class="footer">
-	<div class="title">
-		  
-		  
-    </div>
-</div>
-</body>
+    <div class="rightTitle">
+      <h2>Hostels</h2>
+      <button id="addHostelButton" onclick="showAddHostelPopup()">+</button>
+      <div id="addHostelPopup" class="popup">
+        <form action="/Room_rover/Owner_Dashboard" id="new_hostel" method="Post">
+          <div class="popup-header">
+            <h2>Add New Hostel</h2>
+          </div>
+          <div class="popup-content">
+            <!-- Hostel registration form goes here -->
+            <label for="hostelName">Hostel Name:</label>
+            <input type="text" id="hostelName" name="hostelName" required><br><br>
 
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required><br><br>
+
+             <label for="documents">Documents:</label>
+            <input type="file" id="documents" name="documents" required><br><br>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" required min="0" oninput="validity.valid||(value='');"><br><br>
+
+            <label for="amenities">Amenities:</label>
+            <ul class="amenities-list">
+              <li>
+                <label><input type="checkbox" name="amenity" value="wifi"> Wi-Fi</label>
+              </li>
+              <li>
+                <label><input type="checkbox" name="amenity" value="parking"> Parking</label>
+              </li>
+              <li>
+                <label><input type="checkbox" name="amenity" value="ac"> Air Conditioning</label>
+              </li>
+              <li>
+                <label><input type="checkbox" name="amenity" value="tv"> TV</label>
+              </li>
+              <li>
+                <label><input type="checkbox" name="amenity" value="laundry"> Laundry</label>
+              </li>
+            </ul>
+
+            <label for="roomType">Room Type:</label>
+            <select id="roomType" name="roomType" required>
+              <option value="single">Single</option>
+              <option value="2-sharing">2 Sharing</option>
+              <option value="3-sharing">3 Sharing</option>
+              <option value="4-sharing">4 Sharing</option>
+            </select><br><br>
+
+            <label for="totalRooms">Total Number of Rooms:</label>
+            <input type="number" id="totalRooms" name="totalRooms" required min="0" oninput="validity.valid||(value='');"><br><br>
+
+
+            <label for="currentlyFilled">Currently Filled Students:</label>
+            <input type="number" id="currentlyFilled" name="currentlyFilled" required min="0" oninput="validity.valid||(value='');"><br><br>
+          </div>
+          <div class="popup-footer">
+            <button id="saveHostelButton" onclick="saveHostel()">Save</button>
+            <button id="clearHostelButton" onclick="clearHostelForm()">Clear</button>
+            <button id="exitHostelButton" onclick="closeAddHostelPopup()">Exit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="title">
+    </div>
+  </div>
+  <script>
+    function showAddHostelPopup() {
+      var popup = document.getElementById("addHostelPopup");
+      popup.style.display = "block";
+    }
+
+    function closeAddHostelPopup() {
+      var popup = document.getElementById("addHostelPopup");
+      popup.style.display = "none";
+    }
+
+    function saveHostel() {
+		// call this method from servlet after saving 
+		//showPopupMessage("saved");
+      // Implement your hostel registration logic here
+    }
+
+    function clearHostelForm() {
+    // Clear the form fields
+    event.preventDefault();
+    document.getElementById("hostelName").value = "";
+    document.getElementById("location").value = "";
+    document.getElementById("documents").value = "";
+    document.getElementById("price").value = "";
+    
+    // Clear the checkboxes for amenities
+    var amenityCheckboxes = document.getElementsByName("amenity");
+    amenityCheckboxes.forEach(function(checkbox) {
+      checkbox.checked = false;
+    });
+
+    document.getElementById("roomType").value = "single";
+    document.getElementById("totalRooms").value = "";
+    document.getElementById("currentlyFilled").value = "";
+  }
+    function showPopupMessage(message) {
+  var popupMessage = document.getElementById("popupMessage");
+  popupMessage.innerText = message;
+  popupMessage.style.display = "block";
+
+  // Automatically hide the message after a few seconds (e.g., 3 seconds)
+  setTimeout(function () {
+    popupMessage.style.display = "none";
+  }, 3000); // 3000 milliseconds = 3 seconds
+}
+
+    
+  </script>
+</body>
 </html>
