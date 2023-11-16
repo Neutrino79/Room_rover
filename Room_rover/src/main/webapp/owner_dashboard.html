@@ -170,6 +170,42 @@
       position: absolute;
       overflow: auto;
 	}
+	/* Add these styles to your existing CSS */
+
+/* Style for the table container */
+#hostels-table-container {
+    max-height: 400px; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+}
+
+/* Style for the table */
+#hostels-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Style for table header cells */
+#hostels-table th {
+    padding: 12px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+/* Style for table cells */
+#hostels-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style for the separating line between items */
+#hostels-list tr:not(:last-child) {
+    border-bottom: 2px solid #ddd;
+}
+
   </style>
 </head>
 <body>
@@ -257,11 +293,22 @@
       </div>
       
     <div class="hostellist">
-	      <ul id="hostels-list">
-	        <!-- Dynamic list items will be added here -->
-
-	      </ul>
-    </div>
+    <table id="hostels-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Remaining Space</th>
+               <th style="text-align: center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="hostels-list">
+            <!-- Dynamic list items will be added here -->
+        </tbody>
+    </table>
+</div>
     </div>
   </div>
   <div class="footer">
@@ -281,36 +328,42 @@
         type: 'POST',
         dataType: 'json',
         success: function (data) {
-            // Clear existing list items
+            // Clear existing table rows
             $('#hostels-list').empty();
 
-            // Iterate over the data and add hostels to the list
+            // Iterate over the data and add hostels to the table
             for (var i = 0; i < data.length; i++) {
                 var hostel = data[i];
-                var listItem = $('<li>');
+                var row = $('<tr>');
 
-                // Display different content based on the status
-                if (hostel.status === 'pending') {
-   				 listItem.text('ID: ' + hostel.hostel_id + ' | Name: ' + hostel.hostel_name + ' | Location: ' + hostel.location + ' | Status: Pending');
-   				 listItem.append('| Rem. Space: ' + hostel.remaining_space);
-				} else if (hostel.status === 'live') {
-  				  listItem.text('ID: ' + hostel.hostel_id + ' | Name: ' + hostel.hostel_name + ' | Location: ' + hostel.location);
-    
-   				 listItem.append('| Rem. Space: ' + hostel.remaining_space);
-   					 // Add edit button only for live hostels
-   				 var editButton = $('<button>').text('Edit').click(function () {
-     			   editHostel(hostel.hostel_id);
-   				 });
-   				 listItem.append(editButton);
-			}
+                // Add data to the table cells
+                row.append('<td>' + hostel.hostel_id + '</td>');
+                row.append('<td>' + hostel.hostel_name + '</td>');
+                row.append('<td>' + hostel.location + '</td>');
+                row.append('<td>' + hostel.status + '</td>');
+                row.append('<td>' + hostel.remaining_space + '</td>');
 
-                // Add delete button
+                // Add buttons
+                var actionsCell = $('<td>');
+                if (hostel.status === 'live') {
+                    var editButton = $('<button>').text('Edit').click(function () {
+                        editHostel(hostel.hostel_id);
+                    });
+                    actionsCell.append(editButton);
+                    
+                }
+
                 var deleteButton = $('<button>').text('Delete').click(function () {
                     deleteHostel(hostel.hostel_id);
                 });
-                listItem.append(deleteButton);
+                actionsCell.css('text-align', 'right');
+                actionsCell.append(deleteButton);
 
-                $('#hostels-list').append(listItem);
+                row.append(actionsCell);
+                deleteButton.css('margin-left', '20px');
+
+                // Append the row to the table
+                $('#hostels-list').append(row);
             }
         },
         error: function (xhr, status, error) {
@@ -318,6 +371,7 @@
         }
     });
 }
+
 
     // Function to edit a hostel
     function editHostel(hostelId) {
