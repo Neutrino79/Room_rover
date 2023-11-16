@@ -8,6 +8,11 @@
       margin: 0;
       padding: 0;
       background-color: #f2f2f2;
+		width: 100%;
+  		height: 100%;
+  		margin: 0;
+ 		overflow: hidden;
+      
     }
     .popup-message {
   display: none;
@@ -75,6 +80,7 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       position: relative;
       border: 1px solid #fff;
+      
     }
     .rightTitle {
       text-align: center;
@@ -153,6 +159,17 @@
       height: 12px;
       width: 12px;
     }
+    
+	.hostellist{
+		margin-left: 25px;
+		height: 250px;
+		width: 700px;
+		border: 2px solid rgb(0, 14, 0);	
+		border-left: none;
+		border-right: none;
+      position: absolute;
+      overflow: auto;
+	}
   </style>
 </head>
 <body>
@@ -235,16 +252,87 @@
             <button id="saveHostelButton" onclick="saveHostel()">Save</button>
             <button id="clearHostelButton" onclick="clearHostelForm()">Clear</button>
             <button id="exitHostelButton" onclick="closeAddHostelPopup()">Exit</button>
-          </div>
+          </div>         
         </form>
       </div>
+      
+    <div class="hostellist">
+	      <ul id="hostels-list">
+	        <!-- Dynamic list items will be added here -->
+
+	      </ul>
+    </div>
     </div>
   </div>
   <div class="footer">
     <div class="title">
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+	  
+	  $(document).ready(function () {
+            loadHostels();
+        });
+        
+	  function loadHostels(callback) {
+    $.ajax({
+        url: 'HostelList',
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            // Clear existing list items
+            $('#hostels-list').empty();
+
+            // Iterate over the data and add hostels to the list
+            for (var i = 0; i < data.length; i++) {
+                var hostel = data[i];
+                var listItem = $('<li>');
+
+                // Display different content based on the status
+                if (hostel.status === 'pending') {
+   				 listItem.text('ID: ' + hostel.hostel_id + ' | Name: ' + hostel.hostel_name + ' | Location: ' + hostel.location + ' | Status: Pending');
+   				 listItem.append('| Rem. Space: ' + hostel.remaining_space);
+				} else if (hostel.status === 'live') {
+  				  listItem.text('ID: ' + hostel.hostel_id + ' | Name: ' + hostel.hostel_name + ' | Location: ' + hostel.location);
+    
+   				 listItem.append('| Rem. Space: ' + hostel.remaining_space);
+   					 // Add edit button only for live hostels
+   				 var editButton = $('<button>').text('Edit').click(function () {
+     			   editHostel(hostel.hostel_id);
+   				 });
+   				 listItem.append(editButton);
+			}
+
+                // Add delete button
+                var deleteButton = $('<button>').text('Delete').click(function () {
+                    deleteHostel(hostel.hostel_id);
+                });
+                listItem.append(deleteButton);
+
+                $('#hostels-list').append(listItem);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error loading hostels:', error);
+        }
+    });
+}
+
+    // Function to edit a hostel
+    function editHostel(hostelId) {
+        // Implement your edit logic here, e.g., show a form with the selected hostel's data
+        console.log('Edit hostel with ID: ' + hostelId);
+    }
+
+    // Function to delete a hostel
+    function deleteHostel(hostelId) {
+        // Implement your delete logic here, e.g., confirm deletion and send request to servlet
+        console.log('Delete hostel with ID: ' + hostelId);
+    }
+    
+    
+    
     function showAddHostelPopup() {
       var popup = document.getElementById("addHostelPopup");
       popup.style.display = "block";
@@ -259,6 +347,7 @@
 		// call this method from servlet after saving 
 		//showPopupMessage("saved");
       // Implement your hostel registration logic here
+      loadHostels();
     }
 
     function clearHostelForm() {
