@@ -106,7 +106,9 @@
       padding: 0;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       border: 1px solid #fff;
-      z-index: 1;
+      z-index: 100;
+      position: fixed;
+      
     }
     .popup-header {
       background-color: #333;
@@ -315,6 +317,18 @@
     <div class="title">
     </div>
   </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
 	  
@@ -353,9 +367,11 @@
                     
                 }
 
-                var deleteButton = $('<button>').text('Delete').click(function () {
-                    deleteHostel(hostel.hostel_id);
-                });
+               var deleteButton = $('<button>').text('Delete').click(function () {
+   				 var hostelId = $(this).data('hostel-id');
+   				 deleteHostel(hostelId);
+				}).attr('data-hostel-id', hostel.hostel_id);
+
                 actionsCell.css('text-align', 'right');
                 actionsCell.append(deleteButton);
 
@@ -370,7 +386,7 @@
             console.log('Error loading hostels:', error);
         }
     });
-}
+	}
 
 
     // Function to edit a hostel
@@ -379,11 +395,50 @@
         console.log('Edit hostel with ID: ' + hostelId);
     }
 
-    // Function to delete a hostel
+
+	$('.delete-button').click(function () {
+    var hostelId = $(this).data('hostel-id');
+    System.out.println("from html hostel id ==="+hostelId);
+    deleteHostel(hostelId);
+	});
+
+	
     function deleteHostel(hostelId) {
-        // Implement your delete logic here, e.g., confirm deletion and send request to servlet
-        console.log('Delete hostel with ID: ' + hostelId);
+    // Show a confirmation dialog
+    var confirmDelete = confirm("Are you sure you want to delete this hostel?");
+    
+    if (confirmDelete) {
+        // Make an AJAX request to the servlet for delete operation
+        // Include hostelId in the request to identify the hostel to be deleted
+        $.ajax({
+            url: 'HostelList',
+            type: 'POST',
+            data: { action: 'delete', hostelId: hostelId},
+            success: function (response) {
+               try {
+       // No need to parse, 'response' is already an object
+            if (response.message.includes("successfully")) {
+                // Show success message in the popup
+                showPopupMessage(response.message);
+
+                // Refresh the hostel list
+                loadHostels();
+            } else {
+                console.log('Error deleting hostel:', response.message);
+            }
+  			  } catch (error) {
+      			  console.log('Error parsing JSON:', error);
+   		 }
+            },
+            error: function (xhr, status, error) {
+            console.log('Error deleting hostel - Status:', status);
+            console.log('Error deleting hostel - Error:', error);
+            console.log('Error deleting hostel - Response:', xhr.responseText);
+        }
+
+        });
     }
+	}
     
     
     

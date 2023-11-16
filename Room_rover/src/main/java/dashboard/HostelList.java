@@ -30,10 +30,17 @@ public class HostelList extends HttpServlet {
     	response.setContentType("application/json");
     	PrintWriter out = response.getWriter();
     	 Connection conn = null;
+    	 conn=DBConn.getConnection();
+    	 
+    	 
+    	 String action = request.getParameter("action");
+    	 
+         if ("delete".equals(action)) {
+             int hostelId = Integer.parseInt(request.getParameter("hostelId"));
+             deleteHostel(conn,hostelId, response);
+         }
          try 
-         {
-             conn=DBConn.getConnection();
-             // Query to retrieve items from the database
+         {            
              String sql = "select * from hostels where owner_id ="+ID;
              PreparedStatement statement = conn.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery();
@@ -61,6 +68,16 @@ public class HostelList extends HttpServlet {
              }
              out.close();
          }
+         
+         
+         
+         
+       //------------ delete code ------------//
+
+         
+       
+      
+                
     }
 
     private String resultSetToJSON(ResultSet resultSet) throws SQLException {
@@ -108,7 +125,50 @@ public class HostelList extends HttpServlet {
         }
         json.append("]");
         return json.toString();
-    }
+        
+    }   
+    
+    
+    private void deleteHostel(Connection conn, int hostelId, HttpServletResponse response) throws IOException {
+    	response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        try {
+            String deleteSql = "DELETE FROM hostels WHERE hostel_id = ?";
+            try (PreparedStatement deleteStatement = conn.prepareStatement(deleteSql)) {
+            	deleteStatement.setInt(1, hostelId);
+                int rowsAffected = deleteStatement.executeUpdate();
 
+                if (rowsAffected > 0) {
+                    // Indicate success in the response
+                    out.print("{\"message\": \"Hostel deleted successfully!\"}");
+                } else {
+                    // Indicate failure in the response
+                    out.print("{\"message\": \"Hostel not found or could not be deleted.\"}");
+                }
+
+                // Commit the transaction
+                conn.commit();
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle SQL exception and send an error response
+           // out.print("{\"message\": \"Error deleting hostel: " + e.getMessage() + "\"}");
+        } finally {
+            // Close the PrintWriter
+            if (out != null) {
+                out.close();
+            }
+
+            // Close the database connection
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
