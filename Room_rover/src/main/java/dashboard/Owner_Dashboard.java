@@ -41,43 +41,44 @@ public class Owner_Dashboard extends HttpServlet {
      HttpSession session = request.getSession();
      int ID = (int) session.getAttribute("ID");
 
-     // Retrieve data from the form
-     String hostelName = request.getParameter("hostelName");
-     String location = request.getParameter("location");
-     int totalRooms = Integer.parseInt(request.getParameter("totalRooms"));
-     String roomType = request.getParameter("roomType");
-     int occupied = Integer.parseInt(request.getParameter("currentlyFilled"));
-     double price = Double.parseDouble(request.getParameter("price"));
-     String[] selectedAmenities = request.getParameterValues("amenities[]");
-     String amenitiesString = String.join(", ", selectedAmenities);
+     if ("add".equals(request.getParameter("hostelEditMode")))
+  	{
+ 	 System.out.print("herreeeeeee frommm neww hostel");
+ 	 // Retrieve data from the form
+      String hostelName = request.getParameter("hostelName");
+      String location = request.getParameter("location");
+      int totalRooms = Integer.parseInt(request.getParameter("totalRooms"));
+      String roomType = request.getParameter("roomType");
+      int occupied = Integer.parseInt(request.getParameter("currentlyFilled"));
+      double price = Double.parseDouble(request.getParameter("price"));
+      String[] selectedAmenities = request.getParameterValues("amenities[]");
+      String amenitiesString = String.join(", ", selectedAmenities);
 
-     // Calculate the total students that can live in the hostel
-     int totalStudentsCanLive = 0;
-     if (roomType.equals("single")) {
-         totalStudentsCanLive = 1 * totalRooms;
-     } else if (roomType.equals("2-sharing")) {
-         totalStudentsCanLive = 2 * totalRooms;
-     } else if (roomType.equals("3-sharing")) {
-         totalStudentsCanLive = 3 * totalRooms;
-     } else if (roomType.equals("4-sharing")) {
-         totalStudentsCanLive = 4 * totalRooms;
-     }
+      // Calculate the total students that can live in the hostel
+      int totalStudentsCanLive = 0;
+      if (roomType.equals("single")) {
+          totalStudentsCanLive = 1 * totalRooms;
+      } else if (roomType.equals("2-sharing")) {
+          totalStudentsCanLive = 2 * totalRooms;
+      } else if (roomType.equals("3-sharing")) {
+          totalStudentsCanLive = 3 * totalRooms;
+      } else if (roomType.equals("4-sharing")) {
+          totalStudentsCanLive = 4 * totalRooms;
+         }
 
-     // Check if the hostel is full
-     boolean isFull = (occupied >= totalStudentsCanLive);
+   // Check if the hostel is full
+      boolean isFull = (occupied >= totalStudentsCanLive);
 
-     // Validate occupied students
-     if (occupied > totalStudentsCanLive) {
-         out.println("Error: Occupied students cannot exceed total students who can live.");
-         return; // Stop processing
-     }
+   // Validate occupied students
+      if (occupied > totalStudentsCanLive) {
+          out.println("Error: Occupied students cannot exceed total students who can live.");
+          return; // Stop processing
+         }
 
-     // Insert data into the database
-     Connection conn = null;
-     try {
-         conn = DBConn.getConnection();
-         String insertQuery = "INSERT INTO hostels (hostel_name, location, owner_id, total_rooms, room_type, occupied, Is_full, price, amenities, status, documents) " +
-                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+   // Insert data into the database
+      Connection conn = null;
+         try {conn = DBConn.getConnection();
+         String insertQuery = "INSERT INTO hostels (hostel_name, location, owner_id, total_rooms, room_type, occupied, Is_full, price, amenities, status, documents) " +"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
          PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
          preparedStatement.setString(1, hostelName);
          preparedStatement.setString(2, location);
@@ -114,22 +115,27 @@ public class Owner_Dashboard extends HttpServlet {
          } else {
         	 out.println("<script>alert('Error: Hostel data could not be saved.'); window.history.back();</script>");
          }
-
-         conn.close();
-     } catch (SQLException e) {
-         e.printStackTrace();
-         out.println("Error: Database error occurred while saving hostel data.");
-         out.println("SQL State: " + e.getSQLState());
-         out.println("Error Message: " + e.getMessage());
-     } catch (Exception e) {
-         e.printStackTrace();
-         out.println("Error: Exception occurred while saving hostel data. Please check your code and logs for more details." + e.getMessage());
-     } finally {
-         try {
              conn.close();
          } catch (SQLException e) {
              e.printStackTrace();
+             out.println("Error: Database error occurred while saving hostel data.");
+             out.println("SQL State: " + e.getSQLState());
+             out.println("Error Message: " + e.getMessage());
+         } catch (Exception e) {
+             e.printStackTrace();
+             out.println("Error: Exception occurred while saving hostel data. Please check your code and logs for more details." + e.getMessage());
+         } finally {
+             try {
+                 conn.close();
+             } catch (SQLException e) {
+                 e.printStackTrace();
+             }
          }
+  		}
+
+     else if ("update".equals(request.getParameter("hostelEditMode"))) {
+
+    	 System.out.print("herreeeeeee frommm UPDATE hostel");
      }
  }
 

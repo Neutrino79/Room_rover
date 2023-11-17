@@ -234,6 +234,9 @@
       <button id="addHostelButton" onclick="showAddHostelPopup()">+</button>
       <div id="addHostelPopup" class="popup">
         <form action="/Room_rover/Owner_Dashboard" id="new_hostel" method="Post" enctype="multipart/form-data">
+			<input type="hidden" id="hostelEditMode" name="hostelEditMode" value="add">
+			<input type="hidden" id="hostelId" name="hostelId" value="" />
+
           <div class="popup-header">
             <h2>Add New Hostel</h2>
           </div>
@@ -245,9 +248,8 @@
             <label for="location">Location:</label>
             <input type="text" id="location" name="location" required><br><br>
 
-             <label for="documents">Documents:</label>
-			<input type="file" id="documents" name="documents" required><br><br>
-
+             <label for="documents">Document:</label>
+    		 <input type="file" id="documents" name="documents"><br><br>
 
             <label for="price">Price:</label>
             <input type="number" id="price" name="price" required min="0" oninput="validity.valid||(value='');"><br><br>
@@ -360,9 +362,15 @@
                 // Add buttons
                 var actionsCell = $('<td>');
                 if (hostel.status === 'live') {
-                    var editButton = $('<button>').text('Edit').click(function () {
-                        editHostel(hostel.hostel_id);
-                    });
+                    
+                var editButton = $('<button>').text('Edit')
+   				 .attr('data-hostel-id', hostel.hostel_id)
+  				  .click(function () {
+       			 var hostelId = parseInt($(this).data('hostel-id'), 10); // Convert data-hostel-id to an integer
+      			  editHostel(hostelId);
+  			 	 });
+
+
                     actionsCell.append(editButton);
                     
                 }
@@ -389,11 +397,7 @@
 	}
 
 
-    // Function to edit a hostel
-    function editHostel(hostelId) {
-        // Implement your edit logic here, e.g., show a form with the selected hostel's data
-        console.log('Edit hostel with ID: ' + hostelId);
-    }
+ 
 
 
 	$('.delete-button').click(function () {
@@ -440,13 +444,113 @@
     }
 	}
     
-    
-    
-    function showAddHostelPopup() {
-      var popup = document.getElementById("addHostelPopup");
-      popup.style.display = "block";
+    // Assume this function is called when the user clicks the "Edit" button
+	function editHostel(hostelId) {
+            // Make an AJAX request to fetch data based on hostelId
+            /*
+            $.ajax({
+                type: "POST",
+                url: "Prefill",
+                data: {
+                    action: "prefill",
+                    hostelIdToPrefill: hostelId
+                },
+                success: function(data) {
+                    try {
+                        // Assuming the servlet returns JSON data
+                        var jsonData = JSON.parse(data);
+
+                        // Set the values in the form fields for prefilling
+                        document.getElementById('hostelName').value = jsonData.hostelName;
+                        document.getElementById('location').value = jsonData.location;
+                        document.getElementById('price').value = jsonData.price;
+                        document.getElementById('roomType').value = jsonData.roomType;
+                        document.getElementById('totalRooms').value = jsonData.totalRooms;
+                        document.getElementById('currentlyFilled').value = jsonData.occupied; // Assuming 'occupied' is equivalent to 'currentlyFilled'
+
+                        // Load the document path and set it in the file input field
+                        var documentPath = jsonData.documentPath;
+                        if (documentPath) {
+                            document.getElementById('documents').value = documentPath;
+                            document.getElementById('viewDocumentButton').style.display = "inline"; // Show the view button
+                        }
+
+                        // Check and set amenities checkboxes
+                        var amenities = jsonData.amenitiesString.split(", ");
+                        amenities.forEach(function (amenity) {
+                            $('input[name="amenities[]"][value="' + amenity + '"]').prop('checked', true);
+                        });
+
+                        // Show the popup
+                        showHostelPopup();
+                    } catch (error) {
+                        console.error("Error parsing JSON:", error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
+            */
+            showUpdateHostelPopup();
+        }
+
+
+        // Function to view the uploaded document
+        function viewDocument() {
+            var documentPath = document.getElementById('documents').value;
+            window.open(documentPath, '_blank'); // Open the document in a new tab or window
+        }
+        
+        
+        
+        
+    function viewDocument() {
+    // Get the value of the document path from the file input
+    var documentPath = document.getElementById('documents').value;
+
+    // Open the document in a new tab or window
+    window.open(documentPath, '_blank');
+	}
+
+
+
+	function showUpdateHostelPopup() {
+		document.getElementById('hostelEditMode').value = 'update';
+	var popupHeader = document.querySelector('.popup-header h2');
+    if (popupHeader) {
+        popupHeader.innerText = 'Update Hostel'; // Set the default title
     }
 
+    var saveHostelButton = document.getElementById('saveHostelButton');
+    if (saveHostelButton) {
+        saveHostelButton.innerText = 'Update';
+    }
+     showHostelPopup();
+    }
+	
+    
+    function showAddHostelPopup() {
+      document.getElementById('hostelEditMode').value = 'add';
+	var popupHeader = document.querySelector('.popup-header h2');
+    if (popupHeader) {
+        popupHeader.innerText = 'Add New Hostel'; // Set the default title
+    }
+
+    var saveHostelButton = document.getElementById('saveHostelButton');
+    if (saveHostelButton) {
+        saveHostelButton.innerText = 'Save';
+    }
+     showHostelPopup();
+    }
+
+
+
+	function showHostelPopup(){
+	  var popup = document.getElementById("addHostelPopup");
+      popup.style.display = "block";
+	}
+	
     function closeAddHostelPopup() {
       var popup = document.getElementById("addHostelPopup");
       popup.style.display = "none";
