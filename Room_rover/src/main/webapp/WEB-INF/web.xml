@@ -79,4 +79,14 @@
     <servlet-name>HosteList</servlet-name>
     <url-pattern>/HosteList</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Fill</display-name>
+    <servlet-name>Fill</servlet-name>
+    <servlet-class>dashboard.Fill</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Fill</servlet-name>
+    <url-pattern>/Fill</url-pattern>
+  </servlet-mapping>
 </web-app>

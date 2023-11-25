@@ -28,7 +28,7 @@
   z-index: 999; /* Higher z-index value to bring it to the front */
 }
 
-
+      
     .header {
       align-items: center;
       padding: 20px;
@@ -318,7 +318,7 @@
   <div class="footer">
     <div class="title">
     </div>
-  </div>
+</div>
   
   
   
@@ -328,7 +328,7 @@
   
   
   
-  
+
   
   
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -447,15 +447,16 @@
     // Assume this function is called when the user clicks the "Edit" button
 	function editHostel(hostelId) {
             // Make an AJAX request to fetch data based on hostelId
-            /*
+            
             $.ajax({
                 type: "POST",
                 url: "Prefill",
                 data: {
-                    action: "prefill",
+                    action: "Prefill",
                     hostelIdToPrefill: hostelId
                 },
                 success: function(data) {
+					console.log("Response Data:", data);
                     try {
                         // Assuming the servlet returns JSON data
                         var jsonData = JSON.parse(data);
@@ -482,7 +483,7 @@
                         });
 
                         // Show the popup
-                        showHostelPopup();
+                        showUpdateHostelPopup();
                     } catch (error) {
                         console.error("Error parsing JSON:", error);
                     }
@@ -491,8 +492,8 @@
                     console.error("Error fetching data:", error);
                 }
             });
-            */
-            showUpdateHostelPopup();
+            
+          // showUpdateHostelPopup();
         }
 
 
