@@ -14,5 +14,7 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="/Users/atharvhiremath/eclipse-workspace/mysql-connector-j-8.2.0.jar"/>
+	<classpathentry kind="lib" path="/Users/atharvhiremath/eclipse-workspace/git/Room_rover/src/main/webapp/WEB-INF/lib/jackson-core-2.16.0.jar"/>
+	<classpathentry kind="lib" path="/Users/atharvhiremath/eclipse-workspace/git/Room_rover/src/main/webapp/WEB-INF/lib/jackson-databind-2.16.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

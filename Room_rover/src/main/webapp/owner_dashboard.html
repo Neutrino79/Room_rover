@@ -297,6 +297,8 @@
       </div>
       
     <div class="hostellist">
+	<form action="Prefill" id="hostel_edit" method="POST">
+	<input type="hidden" id="hostelId" name="hostelId" value="" />
     <table id="hostels-table">
         <thead>
             <tr>
@@ -312,6 +314,7 @@
             <!-- Dynamic list items will be added here -->
         </tbody>
     </table>
+    </form>
 </div>
     </div>
   </div>
@@ -364,11 +367,23 @@
                 if (hostel.status === 'live') {
                     
                 var editButton = $('<button>').text('Edit')
-   				 .attr('data-hostel-id', hostel.hostel_id)
-  				  .click(function () {
-       			 var hostelId = parseInt($(this).data('hostel-id'), 10); // Convert data-hostel-id to an integer
-      			  editHostel(hostelId);
-  			 	 });
+  				  .attr('type', 'button')  // Change the type to 'button'
+    				.attr('data-hostel-id', hostel.hostel_id)
+    				.click(function ()
+    				 {
+    				    var hostelId = $(this).data('hostel-id');
+     				    console.log('Data attribute hostelId:', hostelId);
+
+      				  // Set the value of the hidden input field
+      				  $('#hostelId').val(hostelId);
+
+        				console.log('After setting hostelId:', $('#hostelId').val());
+
+        				// Submit the form
+        				$('#hostel_edit').submit();
+    				});
+
+	
 
 
                     actionsCell.append(editButton);
@@ -391,8 +406,12 @@
             }
         },
         error: function (xhr, status, error) {
-            console.log('Error loading hostels:', error);
-        }
+   		 console.error("AJAX Error:", xhr.responseText);
+   		 console.error("Status:", status);
+   		 console.error("Error:", error);
+   		 console.error("URL:", this.url);
+		}
+
     });
 	}
 
@@ -443,7 +462,7 @@
         });
     }
 	}
-    
+   /* 
     // Assume this function is called when the user clicks the "Edit" button
 	function editHostel(hostelId) {
             // Make an AJAX request to fetch data based on hostelId
@@ -495,7 +514,7 @@
             
           // showUpdateHostelPopup();
         }
-
+*/
 
         // Function to view the uploaded document
         function viewDocument() {
@@ -517,7 +536,7 @@
 
 
 	function showUpdateHostelPopup() {
-		document.getElementById('hostelEditMode').value = 'update';
+	document.getElementById('hostelEditMode').value = 'update';
 	var popupHeader = document.querySelector('.popup-header h2');
     if (popupHeader) {
         popupHeader.innerText = 'Update Hostel'; // Set the default title

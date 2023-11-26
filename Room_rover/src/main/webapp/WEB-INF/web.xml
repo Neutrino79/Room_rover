@@ -61,16 +61,6 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>Edithostel</display-name>
-    <servlet-name>Edithostel</servlet-name>
-    <servlet-class>dashboard.Edithostel</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Edithostel</servlet-name>
-    <url-pattern>/Edithostel</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
     <display-name>HosteList</display-name>
     <servlet-name>HosteList</servlet-name>
     <servlet-class>dashboard.HosteList</servlet-class>
