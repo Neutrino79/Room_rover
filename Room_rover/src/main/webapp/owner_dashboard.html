@@ -251,7 +251,8 @@
              <label for="documents">Document:</label>
     		 <input type="file" id="documents" name="documents"><br><br>
     		 
-    		 <button id="viewDocumentButton" onclick="viewDocument()">View Document</button>
+    		<button id="viewDocumentButton" onclick="viewDocument(event)">View Document</button>
+
 
 
             <label for="price">Price:</label>
@@ -380,7 +381,7 @@
 
       				  // Set the value of the hidden input field
       				  document.getElementById('hostelIdforfill').value = hostelId;
-      				//  $('#hostelIdforfill').val(hostelId);
+      				  document.getElementById('hostelId').value= hostelId;
 
         				console.log('After setting hostelId:', $('#hostelId').val());
 
@@ -525,25 +526,16 @@
     });
 }
 
-
-        // Function to view the uploaded document
-        function viewDocument() {
+  function viewDocument(event) {
+            // Get the value of the document path from the file input
             var documentPath = document.getElementById('documents').value;
-            window.open(documentPath, '_blank'); // Open the document in a new tab or window
+
+            // Open the document in a new tab or window
+            window.open(documentPath, '_blank');
+
+            // Prevent the form from submitting
+            event.preventDefault();
         }
-        
-        
-        
-        
-    function viewDocument() {
-    // Get the value of the document path from the file input
-    var documentPath = document.getElementById('documents').value;
-
-    // Open the document in a new tab or window
-    window.open(documentPath, '_blank');
-	}
-
-
 
 	function showUpdateHostelPopup() {
 	document.getElementById('hostelEditMode').value = 'update';
@@ -584,6 +576,7 @@
     function closeAddHostelPopup() {
       var popup = document.getElementById("addHostelPopup");
       popup.style.display = "none";
+      event.preventDefault();
     }
 
     function saveHostel() {
@@ -605,6 +598,7 @@
     var amenityCheckboxes = document.getElementsByName("amenity");
     amenityCheckboxes.forEach(function(checkbox) {
       checkbox.checked = false;
+      event.preventDefault();
     });
 
     document.getElementById("roomType").value = "single";
@@ -615,6 +609,9 @@
   var popupMessage = document.getElementById("popupMessage");
   popupMessage.innerText = message;
   popupMessage.style.display = "block";
+
+
+	
 
   // Automatically hide the message after a few seconds (e.g., 3 seconds)
   setTimeout(function () {

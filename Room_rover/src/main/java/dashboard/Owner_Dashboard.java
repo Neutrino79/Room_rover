@@ -133,9 +133,107 @@ public class Owner_Dashboard extends HttpServlet {
          }
   		}
 
-     else if ("update".equals(request.getParameter("hostelEditMode"))) {
+  // ... (previous code)
 
-    	 System.out.print("herreeeeeee frommm UPDATE hostel");
+     
+     
+     
+     
+  // ... (previous code)
+
+     else if ("update".equals(request.getParameter("hostelEditMode"))) {
+         // Retrieve data from the form
+         int hostelId = Integer.parseInt(request.getParameter("hostelId")); // Assuming you have a hidden field for hostelId in your form
+         String hostelName = request.getParameter("hostelName");
+         String location = request.getParameter("location");
+         int totalRooms = Integer.parseInt(request.getParameter("totalRooms"));
+         String roomType = request.getParameter("roomType");
+         int occupied = Integer.parseInt(request.getParameter("currentlyFilled"));
+         double price = Double.parseDouble(request.getParameter("price"));
+         String[] selectedAmenities = request.getParameterValues("amenities[]");
+         String amenitiesString = String.join(", ", selectedAmenities);
+
+         // Calculate the total students that can live in the hostel
+         int totalStudentsCanLive = 0;
+         if (roomType.equals("single")) {
+             totalStudentsCanLive = 1 * totalRooms;
+         } else if (roomType.equals("2-sharing")) {
+             totalStudentsCanLive = 2 * totalRooms;
+         } else if (roomType.equals("3-sharing")) {
+             totalStudentsCanLive = 3 * totalRooms;
+         } else if (roomType.equals("4-sharing")) {
+             totalStudentsCanLive = 4 * totalRooms;
+         }
+
+         // Check if the hostel is full
+         boolean isFull = (occupied >= totalStudentsCanLive);
+
+         // Validate occupied students
+         if (occupied > totalStudentsCanLive) {
+             out.println("Error: Occupied students cannot exceed total students who can live.");
+             return; // Stop processing
+         }
+
+         // Update data in the database
+         Connection conn = null;
+         try {
+             conn = DBConn.getConnection();
+             String updateQuery = "UPDATE hostels SET hostel_name=?, location=?, total_rooms=?, room_type=?, occupied=?, Is_full=?, price=?, amenities=? WHERE hostel_id=?";
+             PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
+             preparedStatement.setString(1, hostelName);
+             preparedStatement.setString(2, location);
+             preparedStatement.setInt(3, totalRooms);
+             preparedStatement.setString(4, roomType);
+             preparedStatement.setInt(5, occupied);
+             preparedStatement.setBoolean(6, isFull);
+             preparedStatement.setDouble(7, price);
+             preparedStatement.setString(8, amenitiesString);
+             preparedStatement.setInt(9, hostelId);
+
+             // Check if the "documents" part is present
+             Part documentPart = request.getPart("documents");
+             if (documentPart != null) {
+                 // Save the updated document file locally
+                 String fileName = getFileName(documentPart);
+                 String uploadPath = "/Users/atharvhiremath/eclipse-workspace/git/Room_rover/src/files"; // Change this to your desired upload directory
+
+                 // Check if the directory exists, create it if not
+                 Files.createDirectories(Path.of(uploadPath));
+
+                 Path filePath = Paths.get(uploadPath, fileName);
+
+                 try (InputStream fileContent = documentPart.getInputStream()) {
+                     Files.copy(fileContent, filePath, StandardCopyOption.REPLACE_EXISTING);
+                 }
+
+                 // Store the updated file path in the database
+                 preparedStatement.setString(8, filePath.toString());
+             }
+
+             int rowsAffected = preparedStatement.executeUpdate();
+
+             if (rowsAffected > 0) {
+                 out.println("<script>alert('Hostel data updated successfully!'); window.location.href='owner_dashboard.html';</script>");
+             } else {
+                 out.println("<script>alert('Error: Hostel data could not be updated.'); window.history.back();</script>");
+             }
+
+             conn.close();
+         } catch (SQLException e) {
+             e.printStackTrace();
+             out.println("Error: Database error occurred while updating hostel data.");
+             out.println("SQL State: " + e.getSQLState());
+             out.println("Error Message: " + e.getMessage());
+         } catch (Exception e) {
+             e.printStackTrace();
+             out.println("Error: Exception occurred while updating hostel data. Please check your code and logs for more details." + e.getMessage());
+         } finally {
+             try {
+                 conn.close();
+             } catch (SQLException e) {
+                 e.printStackTrace();
+             }
+         }
      }
  }
 
