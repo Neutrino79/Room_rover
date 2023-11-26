@@ -250,6 +250,9 @@
 
              <label for="documents">Document:</label>
     		 <input type="file" id="documents" name="documents"><br><br>
+    		 
+    		 <button id="viewDocumentButton" onclick="viewDocument()">View Document</button>
+
 
             <label for="price">Price:</label>
             <input type="number" id="price" name="price" required min="0" oninput="validity.valid||(value='');"><br><br>
@@ -297,8 +300,8 @@
       </div>
       
     <div class="hostellist">
-	<form action="Prefill" id="hostel_edit" method="POST">
-	<input type="hidden" id="hostelId" name="hostelId" value="" />
+	
+	<input type="hidden" id="hostelIdforfill" name="hostelId" value="" />
     <table id="hostels-table">
         <thead>
             <tr>
@@ -314,7 +317,7 @@
             <!-- Dynamic list items will be added here -->
         </tbody>
     </table>
-    </form>
+
 </div>
     </div>
   </div>
@@ -371,21 +374,20 @@
     				.attr('data-hostel-id', hostel.hostel_id)
     				.click(function ()
     				 {
+						 event.preventDefault();
     				    var hostelId = $(this).data('hostel-id');
      				    console.log('Data attribute hostelId:', hostelId);
 
       				  // Set the value of the hidden input field
-      				  $('#hostelId').val(hostelId);
+      				  document.getElementById('hostelIdforfill').value = hostelId;
+      				//  $('#hostelIdforfill').val(hostelId);
 
         				console.log('After setting hostelId:', $('#hostelId').val());
 
-        				// Submit the form
-        				$('#hostel_edit').submit();
+        				editHostel(hostelId);
+        				
+        				
     				});
-
-	
-
-
                     actionsCell.append(editButton);
                     
                 }
@@ -462,59 +464,67 @@
         });
     }
 	}
-   /* 
+  
     // Assume this function is called when the user clicks the "Edit" button
 	function editHostel(hostelId) {
-            // Make an AJAX request to fetch data based on hostelId
-            
-            $.ajax({
-                type: "POST",
-                url: "Prefill",
-                data: {
-                    action: "Prefill",
-                    hostelIdToPrefill: hostelId
-                },
-                success: function(data) {
-					console.log("Response Data:", data);
-                    try {
-                        // Assuming the servlet returns JSON data
-                        var jsonData = JSON.parse(data);
+    // Make an AJAX request to fetch data based on hostelId
+    console.log("id = " + hostelId);
+    $.ajax({
+        type: "POST",
+        url: "Prefill",
+        data: {
+            action: "Prefill",
+            hostelIdToPrefill: hostelId
+        },
+        success: function (data) {
+            console.log("Response Data:", data);
+            try {
+                // Assuming the servlet returns JSON data
+                // Directly access the properties of the data object
+                var hostel = data;
 
-                        // Set the values in the form fields for prefilling
-                        document.getElementById('hostelName').value = jsonData.hostelName;
-                        document.getElementById('location').value = jsonData.location;
-                        document.getElementById('price').value = jsonData.price;
-                        document.getElementById('roomType').value = jsonData.roomType;
-                        document.getElementById('totalRooms').value = jsonData.totalRooms;
-                        document.getElementById('currentlyFilled').value = jsonData.occupied; // Assuming 'occupied' is equivalent to 'currentlyFilled'
+                // Set the values in the form fields for prefilling
+                document.getElementById('hostelName').value = hostel.hostelName;
+                document.getElementById('location').value = hostel.location;
+                document.getElementById('price').value = hostel.price;
+                document.getElementById('roomType').value = hostel.roomType;
+                document.getElementById('totalRooms').value = hostel.totalRooms;
+                document.getElementById('currentlyFilled').value = hostel.occupied; // Assuming 'occupied' is equivalent to 'currentlyFilled'
 
-                        // Load the document path and set it in the file input field
-                        var documentPath = jsonData.documentPath;
-                        if (documentPath) {
-                            document.getElementById('documents').value = documentPath;
-                            document.getElementById('viewDocumentButton').style.display = "inline"; // Show the view button
-                        }
+                // Load the document path and set it in the file input field
+                var documentPath = hostel.documentPath;
+                if (documentPath) {
+                    // Create a new file input element
+                    var newFileInput = document.createElement('input');
+                    newFileInput.type = 'file';
+                    newFileInput.id = 'documents';
 
-                        // Check and set amenities checkboxes
-                        var amenities = jsonData.amenitiesString.split(", ");
-                        amenities.forEach(function (amenity) {
-                            $('input[name="amenities[]"][value="' + amenity + '"]').prop('checked', true);
-                        });
+                    // Replace the existing file input with the new one
+                    var existingFileInput = document.getElementById('documents');
+                    existingFileInput.parentNode.replaceChild(newFileInput, existingFileInput);
 
-                        // Show the popup
-                        showUpdateHostelPopup();
-                    } catch (error) {
-                        console.error("Error parsing JSON:", error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching data:", error);
+                    // Show the view button
+                    document.getElementById('viewDocumentButton').style.display = "inline";
                 }
-            });
-            
-          // showUpdateHostelPopup();
+
+                // Check and set amenities checkboxes
+                var amenities = hostel.amenitiesString.split(", ");
+                amenities.forEach(function (amenity) {
+                    $('input[name="amenities[]"][value="' + amenity + '"]').prop('checked', true);
+                });
+
+                // Show the popup
+                showUpdateHostelPopup();
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching data:", error);
         }
-*/
+    });
+}
+
 
         // Function to view the uploaded document
         function viewDocument() {
