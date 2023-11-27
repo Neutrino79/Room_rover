@@ -79,4 +79,34 @@
     <servlet-name>Fill</servlet-name>
     <url-pattern>/Fill</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Stud_dash</display-name>
+    <servlet-name>Stud_dash</servlet-name>
+    <servlet-class>dashboard.Stud_dash</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Stud_dash</servlet-name>
+    <url-pattern>/Stud_dash</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>GetLocationsServlet</display-name>
+    <servlet-name>GetLocationsServlet</servlet-name>
+    <servlet-class>stud_dashboard.GetLocationsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetLocationsServlet</servlet-name>
+    <url-pattern>/GetLocationsServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>SearchHostelsServlet</display-name>
+    <servlet-name>SearchHostelsServlet</servlet-name>
+    <servlet-class>stud_dashboard.SearchHostelsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SearchHostelsServlet</servlet-name>
+    <url-pattern>/SearchHostelsServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
