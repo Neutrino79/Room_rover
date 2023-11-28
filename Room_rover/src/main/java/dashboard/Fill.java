@@ -44,9 +44,12 @@ public class Fill extends HttpServlet {
         private double price;
         private String amenitiesString;
         private String documentPath;
+        private String address;
+        private String landmark;
+        private String gender;
 
         public Hostel(String hostelName, String location, int totalRooms, String roomType, int occupied,
-                      double price, String amenitiesString, String documentPath) {
+                      double price, String amenitiesString, String documentPath, String address,String landmark,String gender) {
             this.hostelName = hostelName;
             this.location = location;
             this.totalRooms = totalRooms;
@@ -55,6 +58,9 @@ public class Fill extends HttpServlet {
             this.price = price;
             this.amenitiesString = amenitiesString;
             this.documentPath = documentPath;
+            this.address=address;
+            this.landmark=landmark;
+            this.gender=gender;
         }
 
         public String getHostelName() {
@@ -120,6 +126,24 @@ public class Fill extends HttpServlet {
         public void setDocumentPath(String documentPath) {
             this.documentPath = documentPath;
         }
+        public String getaddress() {
+           return address;
+        }
+        public void setaddress(String address) {
+            this.address = address;
+        }
+        public String getlandmark() {
+            return landmark;
+         }
+         public void setlandmark(String landmark) {
+             this.landmark = landmark;
+         }
+         public String getgender() {
+             return gender;
+          }
+          public void setgender(String gender) {
+              this.gender = gender;
+          }
     }
     
     
@@ -155,10 +179,13 @@ public class Fill extends HttpServlet {
                         double price = resultSet.getDouble("price");
                         String amenitiesString = resultSet.getString("amenities");
                         String documentPath = resultSet.getString("documents");
+                        String address = resultSet.getString("address");
+                        String landmark = resultSet.getString("landmark");
+                        String gender=resultSet.getString("gender");
 
                         // Create a Hostel object or use a Map to store the data
                         Hostel hostel = new Hostel(hostelName, location, totalRooms, roomType, occupied, price,
-                                amenitiesString, documentPath);
+                                amenitiesString, documentPath,address,landmark,gender);
 
                         // Convert the Hostel object to JSON using Jackson ObjectMapper
                         ObjectMapper objectMapper = new ObjectMapper();

@@ -78,7 +78,7 @@ public class Owner_Dashboard extends HttpServlet {
    // Insert data into the database
       Connection conn = null;
          try {conn = DBConn.getConnection();
-         String insertQuery = "INSERT INTO hostels (hostel_name, location, owner_id, total_rooms, room_type, occupied, Is_full, price, amenities, status, documents) " +"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+         String insertQuery = "INSERT INTO hostels (hostel_name, location, owner_id, total_rooms, room_type, occupied, Is_full, price, amenities, status, documents,address,landmark,gender) " +"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)";
          PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
          preparedStatement.setString(1, hostelName);
          preparedStatement.setString(2, location);
@@ -107,7 +107,16 @@ public class Owner_Dashboard extends HttpServlet {
 
          // Store the file path in the database
          preparedStatement.setString(11, filePath.toString());
-
+         
+         
+         String address = request.getParameter("address");
+         String landmark = request.getParameter("landmark");
+         String gender = request.getParameter("gender");
+         
+         preparedStatement.setString(12, address);
+         preparedStatement.setString(13, landmark);
+         preparedStatement.setString(14, gender);
+         
          int rowsAffected = preparedStatement.executeUpdate();
 
          if (rowsAffected > 0) {
@@ -152,6 +161,9 @@ public class Owner_Dashboard extends HttpServlet {
          double price = Double.parseDouble(request.getParameter("price"));
          String[] selectedAmenities = request.getParameterValues("amenities[]");
          String amenitiesString = String.join(", ", selectedAmenities);
+         String address = request.getParameter("address");
+         String landmark = request.getParameter("landmark");
+         String gender = request.getParameter("gender");
 
          // Calculate the total students that can live in the hostel
          int totalStudentsCanLive = 0;
@@ -178,7 +190,7 @@ public class Owner_Dashboard extends HttpServlet {
          Connection conn = null;
          try {
              conn = DBConn.getConnection();
-             String updateQuery = "UPDATE hostels SET hostel_name=?, location=?, total_rooms=?, room_type=?, occupied=?, Is_full=?, price=?, amenities=? WHERE hostel_id=?";
+             String updateQuery = "UPDATE hostels SET hostel_name=?, location=?, total_rooms=?, room_type=?, occupied=?, Is_full=?, price=?, amenities=? , address=? , landmark=?,gender=? WHERE hostel_id=?";
              PreparedStatement preparedStatement = conn.prepareStatement(updateQuery);
              preparedStatement.setString(1, hostelName);
              preparedStatement.setString(2, location);
@@ -188,7 +200,11 @@ public class Owner_Dashboard extends HttpServlet {
              preparedStatement.setBoolean(6, isFull);
              preparedStatement.setDouble(7, price);
              preparedStatement.setString(8, amenitiesString);
-             preparedStatement.setInt(9, hostelId);
+             preparedStatement.setString(9, address);
+             preparedStatement.setString(10, landmark);
+             preparedStatement.setString(11, gender);
+             preparedStatement.setInt(12, hostelId);
+             
 
              // Check if the "documents" part is present
              Part documentPart = request.getPart("documents");

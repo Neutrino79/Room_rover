@@ -96,19 +96,18 @@
     /* Add popup styles */
     .popup {
       display: none;
-      position: fixed;
-      top: 48.3%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 950px;
-      height: 600px;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 0;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border: 1px solid #fff;
-      z-index: 100;
-      position: fixed;
-      
+    position: fixed;
+    top: 49%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 950px;
+    height: 600px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #fff;
+    z-index: 100;
+    position: fixed;
     }
     .popup-header {
       background-color: #333;
@@ -120,17 +119,20 @@
       margin: 0;
     }
     .popup-content {
-      padding: 20px;
+        max-height: 520px; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
     }
     .popup-footer {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      padding: 10px 0;
+     position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
     }
     .popup-footer button {
       background-color: #333;
@@ -247,6 +249,12 @@
 
             <label for="location">Location:</label>
             <input type="text" id="location" name="location" required><br><br>
+            
+            <label for="address">Address:</label>
+  			  <input type="text" id="address" name="address" required><br><br>
+
+    			<label for="landmark">Landmark:</label>
+   			 <input type="text" id="landmark" name="landmark" required><br><br>
 
              <label for="documents">Document:</label>
     		 <input type="file" id="documents" name="documents"><br><br>
@@ -284,6 +292,13 @@
               <option value="3-sharing">3 Sharing</option>
               <option value="4-sharing">4 Sharing</option>
             </select><br><br>
+            
+            <label for="gender">Gender Specific:</label>
+			<select id="gender" name="gender" required>
+ 			 <option value="boys">Boys</option>
+  			<option value="girls">Girls</option>
+  			<option value="both">Both</option>
+			</select><br><br>
 
             <label for="totalRooms">Total Number of Rooms:</label>
             <input type="number" id="totalRooms" name="totalRooms" required min="0" oninput="validity.valid||(value='');"><br><br>
@@ -491,6 +506,15 @@
                 document.getElementById('roomType').value = hostel.roomType;
                 document.getElementById('totalRooms').value = hostel.totalRooms;
                 document.getElementById('currentlyFilled').value = hostel.occupied; // Assuming 'occupied' is equivalent to 'currentlyFilled'
+                
+                document.getElementById('address').value = hostel.address;
+                document.getElementById('landmark').value = hostel.landmark;
+                
+				document.getElementById('gender').value = hostel.gender;
+
+                // Set the gender attribute in the request
+				
+
 
                 // Load the document path and set it in the file input field
                 var documentPath = hostel.documentPath;
@@ -591,6 +615,8 @@
     event.preventDefault();
     document.getElementById("hostelName").value = "";
     document.getElementById("location").value = "";
+    document.getElementById("address").value = "";
+    document.getElementById("landmark").value = "";
     document.getElementById("documents").value = "";
     document.getElementById("price").value = "";
     
