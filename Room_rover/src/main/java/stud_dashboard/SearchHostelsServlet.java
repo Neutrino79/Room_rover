@@ -70,6 +70,7 @@ public class SearchHostelsServlet extends HttpServlet {
             }
 
             // Prepare the statement with the dynamically built query
+            
              preparedStatement = conn.prepareStatement(searchQuery);
 
             // Set parameters based on user input

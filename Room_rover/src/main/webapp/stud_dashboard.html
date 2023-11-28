@@ -66,7 +66,8 @@
     }
 
     .searchbox {
-      margin-left: 100px;
+      margin-left: 10px;
+      margin-right: 10px;
     }
 
     .Title {
@@ -87,6 +88,54 @@
     .rightTitle {
       text-align: center;
     }
+    
+    .matchingHostelsSection{
+		margin-left: 25px;
+		height: 250px;
+		width: 700px;
+		border: 2px solid rgb(0, 14, 0);	
+		border-left: none;
+		border-right: none;
+      position: absolute;
+      overflow: auto;
+      
+	}
+	#hostels-table-container {
+    max-height: 400px; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+}
+
+/* Style for the table */
+#hostels-table {
+	margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Style for table header cells */
+/* Style for table header cells */
+#hostels-table th {
+    padding: 12px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    white-space: nowrap; /* Add this line to prevent text wrapping */
+}
+
+
+/* Style for table cells */
+#hostels-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style for the separating line between items */
+#hostels-list tr:not(:last-child) {
+    border-bottom: 2px solid #ddd;
+}
   </style>
 </head>
 <body>
@@ -124,7 +173,25 @@
 
     <button onclick="searchHostels()">Search</button>
     <!-- Display the matching hostels in this section of your UI -->
-    <div id="matchingHostelsSection"></div>
+    <div id="matchingHostelsSection">
+    <input type="hidden" id="hostelIdforfill" name="hostelId" value="" />
+    <table id="hostels-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Remaining Space</th>
+                <th>Room Type</th>
+                <th>Price</th>
+                <th style="text-align: center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="hostels-list">
+            <!-- Dynamic list items will be added here -->
+        </tbody>
+    </table>
+</div>
 </div>
   </div>
   <div class="right">
@@ -193,49 +260,48 @@
     
     
     // Function to display matching hostels in the UI
-    function displayMatchingHostels(hostels) {
-        var matchingHostelsSection = document.getElementById("matchingHostelsSection");
+    // Function to display matching hostels in the UI
+function displayMatchingHostels(hostels) {
+    var hostelsList = document.getElementById("hostels-list");
 
-        // Clear previous results
-        matchingHostelsSection.innerHTML = "";
+    // Clear previous results
+    hostelsList.innerHTML = "";
 
-        // Check if there are matching hostels
-        if (hostels.length > 0) {
-            // Create a table to display hostels
-            var table = document.createElement("table");
-            table.border = "1";
+    // Check if there are matching hostels
+    if (hostels.length > 0) {
+        // Create rows for each hostel
+        for (var i = 0; i < hostels.length; i++) {
+            var hostel = hostels[i];
+            var row = hostelsList.insertRow(-1);
 
-            // Create header row
-            var headerRow = table.insertRow(0);
-            var headers = ["Hostel Name", "Location", "Price"];
-            for (var i = 0; i < headers.length; i++) {
-                var headerCell = headerRow.insertCell(i);
-                headerCell.innerHTML = headers[i];
-            }
+            // Insert data cells
+            var idCell = row.insertCell(0);
+            idCell.innerHTML = hostel.hostelId;
 
-            // Create rows for each hostel
-            for (var i = 0; i < hostels.length; i++) {
-                var hostel = hostels[i];
-                var row = table.insertRow(i + 1);
+            var nameCell = row.insertCell(1);
+            nameCell.innerHTML = hostel.hostelName;
 
-                // Insert data cells
-                var nameCell = row.insertCell(0);
-                nameCell.innerHTML = hostel.hostelName;
+            var locationCell = row.insertCell(2);
+            locationCell.innerHTML = hostel.location;
 
-                var locationCell = row.insertCell(1);
-                locationCell.innerHTML = hostel.location;
+            var remainingSpaceCell = row.insertCell(3);
+            remainingSpaceCell.innerHTML = hostel.remainingSpace;
 
-                var priceCell = row.insertCell(2);
-                priceCell.innerHTML = hostel.price;
-            }
+            var roomTypeCell = row.insertCell(4);
+            roomTypeCell.innerHTML = hostel.roomType;
 
-            // Append the table to the matchingHostelsSection
-            matchingHostelsSection.appendChild(table);
-        } else {
-            // Display a message if no matching hostels found
-            matchingHostelsSection.innerHTML = "<p>No matching hostels found.</p>";
+            var priceCell = row.insertCell(5);
+            priceCell.innerHTML = hostel.price;
+
+            var actionsCell = row.insertCell(6);
+            // Add actions content here if needed
         }
+    } else {
+        // Display a message if no matching hostels found
+        hostelsList.innerHTML = "<tr><td colspan='7'>No matching hostels found.</td></tr>";
     }
+}
+
 </script>
   
   
