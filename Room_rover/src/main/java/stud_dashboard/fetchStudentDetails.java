@@ -34,7 +34,6 @@ public class fetchStudentDetails extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         int ID = (int) session.getAttribute("ID");
@@ -43,7 +42,7 @@ public class fetchStudentDetails extends HttpServlet {
         Connection conn = null;
         try {
             conn = DBConn.getConnection();
-            String query = "SELECT student_name, email, phone, dob FROM student WHERE student_id=?";
+            String query = "SELECT * FROM Students WHERE student_id=?";
             try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
                 preparedStatement.setInt(1, ID);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -52,8 +51,13 @@ public class fetchStudentDetails extends HttpServlet {
                     if (resultSet.next()) {
                         studentDetails.put("student_name", resultSet.getString("student_name"));
                         studentDetails.put("email", resultSet.getString("email"));
+                        studentDetails.put("addr", resultSet.getString("address"));
                         studentDetails.put("phone", resultSet.getString("phone"));
+                        studentDetails.put("aadhar", resultSet.getString("aadhar"));
                         studentDetails.put("dob", resultSet.getString("dob"));
+                        studentDetails.put("gender", resultSet.getString("gender"));
+                        studentDetails.put("college_id", resultSet.getString("college_id"));
+                        studentDetails.put("pf_complete", resultSet.getString("pf_complete"));
                     }
 
                     // Convert the map to JSON and write it to the response
@@ -63,7 +67,7 @@ public class fetchStudentDetails extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             out.println("Error: Exception occurred while fetching student details. Please check your code and logs for more details. Error Message: " + e.getMessage());
-        }finally {
+        } finally {
             try {
                 if (conn != null) {
                     conn.close();

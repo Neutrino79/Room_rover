@@ -129,4 +129,14 @@
     <servlet-name>RetriveHostel</servlet-name>
     <url-pattern>/RetriveHostel</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>UpdtStudServlet</display-name>
+    <servlet-name>UpdtStudServlet</servlet-name>
+    <servlet-class>stud_dashboard.UpdtStudServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdtStudServlet</servlet-name>
+    <url-pattern>/UpdtStudServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
