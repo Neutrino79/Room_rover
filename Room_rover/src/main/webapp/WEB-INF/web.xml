@@ -139,4 +139,14 @@
     <servlet-name>UpdtStudServlet</servlet-name>
     <url-pattern>/UpdtStudServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>BookHostel</display-name>
+    <servlet-name>BookHostel</servlet-name>
+    <servlet-class>stud_dashboard.BookHostel</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BookHostel</servlet-name>
+    <url-pattern>/BookHostel</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -37,7 +37,7 @@ public class fetchStudentDetails extends HttpServlet {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         int ID = (int) session.getAttribute("ID");
-        System.out.println("in the fetch student = " + ID);
+ 
 
         Connection conn = null;
         try {

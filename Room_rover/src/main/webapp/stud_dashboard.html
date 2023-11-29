@@ -377,6 +377,7 @@
             <option value="3-sharing">3 Sharing</option>
             <option value="4-sharing">4 Sharing</option>
         </select><br><br>
+        
 
         <label for="documents">Documents:</label>
 		<button id="viewDocumentButton" onclick="viewDocument()">View Document</button><br><br>
@@ -419,7 +420,9 @@
             <option value="girls">Girls</option>
             <option value="both">Both</option>
         </select><br><br>
-
+        
+		 <label for="dob">Select Enroll Date</label>
+        <input type="date" id="bookStartDate" name="bookStartDate" required ><br><br>
         <!-- Add other necessary fields for booking -->
 
     </div>
@@ -501,7 +504,7 @@
             document.getElementById('phone').value = phone;
             document.getElementById('pf_complete').value=pf_complete;
             
-            if(pf_complete=1)
+            if(pf_complete>0)
             {
 				document.getElementById('studaddr').value=parsedData.addr;
 				document.getElementById('gender').value=parsedData.gender;
@@ -576,6 +579,9 @@
     }
     
     
+    
+var currentHostelId = null;    
+    
     // Function to display matching hostels in the UI
     // Function to display matching hostels in the UI
 function displayMatchingHostels(hostels) {
@@ -619,11 +625,14 @@ function displayMatchingHostels(hostels) {
         // Create a function to handle the click event with the captured hostelId
         function bookButtonClickHandler(id) {
             return function () {
+				
+				currentHostelId = id;
                 // Call a function to handle booking for this hostel
                 showBookHostelPopup();
-
+				
                 // Call the retrieveHostel function with the captured hostel ID
                 retrieveHostel(id);
+                
             };
         }
 
@@ -632,9 +641,10 @@ function displayMatchingHostels(hostels) {
 
         // Attach the function to the onclick event
         bookButton.onclick = bookButtonClickHandler(hostelId);
-
+		
         actionsCell.appendChild(bookButton);
         // Add actions content here if needed
+       
     }
     } else {
         // Display a message if no matching hostels found
@@ -643,8 +653,14 @@ function displayMatchingHostels(hostels) {
 }
 
 
+
+
+
+
 function retrieveHostel(hostelId){
-	console.log("hostel id="+hostelId);
+	console.log("lol ID="+hostelId);
+	document.getElementById('hostelId').value=hostelId;
+	//console.log("new lil ID="+document.getElementById('hostelId').value);
 	
 	$.ajax({
         type: "POST",
@@ -682,28 +698,33 @@ function retrieveHostel(hostelId){
                 // Load the document path and set it in the file input field
                 var documentPath = hostel.documentPath;
                 if (documentPath) {
-                    // Create a new file input element
-                    var newFileInput = document.createElement('input');
-                    newFileInput.type = 'file';
-                    newFileInput.id = 'documents';
-
-                    // Replace the existing file input with the new one
+                    // Replace the existing file input if it exists
                     var existingFileInput = document.getElementById('documents');
-                    existingFileInput.parentNode.replaceChild(newFileInput, existingFileInput);
+                    if (existingFileInput) {
+                        // Create a new file input element
+                        var newFileInput = document.createElement('input');
+                        newFileInput.type = 'file';
+                        newFileInput.id = 'documents';
 
-                    // Show the view button
-                    document.getElementById('viewDocumentButton').style.display = "inline";
+                        // Replace the existing file input with the new one
+                        existingFileInput.parentNode.replaceChild(newFileInput, existingFileInput);
+
+                        // Show the view button
+                        document.getElementById('viewDocumentButton').style.display = "inline";
+                    } else {
+                        console.error("Existing file input not found.");
+                    }
                 }
-
                 // Check and set amenities checkboxes
                 
-
+				
                 // Show the popup
-                bookHostelPopup();
+                showBookHostelPopup();
             } catch (error) {
                 console.error("Error parsing JSON:", error);
             }
         },
+        
         error: function (xhr, status, error) {
             console.error("Error fetching data:", error);
         }
@@ -756,6 +777,74 @@ function updateStudDetails() {
 
 
 
+function Booking() {
+    // Collect data from the HTML form
+    console.log("currentHostelId="+currentHostelId);
+    var hostelId = currentHostelId;
+    var bookingTime = new Date();// Current time
+    var startDate = document.getElementById('bookStartDate').value;
+    var bookingDuration = document.getElementById('bookingDuration').value;
+    var price=document.getElementById('price').value;
+
+    // Calculate end date based on start date and booking duration
+    var bookingDurationDropdown = document.getElementById('bookingDuration');
+    var selectedBookingDuration = bookingDurationDropdown.options[bookingDurationDropdown.selectedIndex].value;
+
+    // Calculate end date based on start date and selected booking duration
+    var endDate = new Date(startDate);
+
+    switch (selectedBookingDuration) {
+        case '1-month':
+            endDate.setMonth(endDate.getMonth() + 1);
+            break;
+        case '3-months':
+            endDate.setMonth(endDate.getMonth() + 3);
+            break;
+        case '6-months':
+            endDate.setMonth(endDate.getMonth() + 6);
+            break;
+        case '1-year':
+            endDate.setFullYear(endDate.getFullYear() + 1);
+            break;
+        default:
+            // Handle unknown duration
+            console.error('Unknown booking duration:', selectedBookingDuration);
+            return;
+    }
+
+    // Prepare the data to be sent to the server
+    var data = {
+        action: "BookHostelServlet",
+        hostelId: hostelId,
+        bookingTime: bookingTime,
+        bookingDuration: bookingDuration,
+        startDate: startDate,
+        endDate: endDate,
+        price: price
+    };
+
+    // Make an AJAX request to the server
+    $.ajax({
+        type: "POST",
+        url: "BookHostelServlet", // Replace with the actual URL of your servlet
+        data: data,
+        success: function (response) {
+            console.log(response);
+            if(response>0)
+            {
+			window.alert("Booking Request sent successfully");
+			closeBookHostelPopup();
+			}
+        },
+        error: function (error) {
+            console.error("Error booking room:", error);
+        }
+    });
+}
+
+
+
+
 function showBookHostelPopup() {
         var popup = document.getElementById("bookHostelPopup");
         popup.style.display = "block";
@@ -784,8 +873,9 @@ function showBookHostelPopup() {
         return; // Stop further execution if the profile is not complete
    		 }
    		  window.alert("in the booking");
-        showPopupMessage("Booking confirmed!");
-        closeBookHostelPopup(); // Close the popup after booking confirmation
+   		  
+          Booking();
+         
     }
 </script>
   
