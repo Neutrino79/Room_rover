@@ -447,6 +447,7 @@
             <tr>
                 <th>ID</th>
                 <th>Hostel name</th>
+                <th>Location</th>
                 <th>Room Type</th>
                 <th>Hostel ID</th>
                 <th>status</th>
@@ -478,7 +479,71 @@
 	  $(document).ready(function () {
        
         fetchStudDetails();
+        loadBookings();
     });
+    
+    
+    
+  function loadBookings(callback) {
+    $.ajax({
+        url: 'FetchBooking',
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            // Clear existing table rows
+            $('#booking-list').empty();
+            console.log('Response Data:', data);
+
+            // Iterate over the data and add bookings to the table
+            for (var i = 0; i < data.length; i++) {
+                var booking = data[i];
+                var row = $('<tr>');
+
+                // Add data to the table cells
+                row.append('<td>' + booking.booking_id + '</td>');
+                row.append('<td>' + booking.hostel_name + '</td>');
+                row.append('<td>' + booking.location + '</td>');
+                row.append('<td>' + booking.room_type + '</td>');
+                row.append('<td>' + booking.hostel_id + '</td>');
+                row.append('<td>' + booking.status + '</td>');
+                row.append('<td>' + booking.price + '</td>');
+
+                // Add buttons
+                var actionsCell = $('<td>');
+                if (booking.status === 'pending') {
+                    var cancelButton = $('<button>').text('Cancel')
+                        .attr('type', 'button')
+                        .attr('data-booking-id', booking.booking_id)
+                        .click(function () {
+                            var bookingId = $(this).data('booking-id');
+                            cancelBooking(bookingId);
+                        });
+                    actionsCell.append(cancelButton);
+                }
+
+                actionsCell.css('text-align', 'center');
+                row.append(actionsCell);
+
+                // Append the row to the table
+                $('#booking-list').append(row);
+            }
+
+            if (callback) {
+                callback();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", xhr.responseText);
+            console.error("Status:", status);
+            console.error("Error:", error);
+            console.error("URL:", this.url);
+        }
+    });
+}
+
+	
+	
+	
     
    function fetchStudDetails() {
     $.ajax({
@@ -524,6 +589,31 @@
             console.log(parsedData);
         },
         // ...
+    });
+}
+
+
+	function cancelBooking(bookingId) {
+    $.ajax({
+        url: 'CancelBooking',
+        type: 'POST',
+        data: { bookingId: bookingId },
+        success: function (data) {
+            if (data === "1") {
+                // Booking cancelled successfully, show success popup
+                alert('Booking cancelled successfully');
+            } else {
+                // Booking cancellation failed, show error popup or handle as needed
+                alert('Booking cancellation failed');
+            }
+            // Optionally, you can also refresh the booking list here
+            loadBookings();
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", xhr.responseText);
+            console.error("Status:", status);
+            console.error("Error:", error);
+        }
     });
 }
 

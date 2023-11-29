@@ -47,6 +47,7 @@ public class Fill extends HttpServlet {
         private String address;
         private String landmark;
         private String gender;
+      //  private int contains;
 
         public Hostel(String hostelName, String location, int totalRooms, String roomType, int occupied,
                       double price, String amenitiesString, String documentPath, String address,String landmark,String gender) {

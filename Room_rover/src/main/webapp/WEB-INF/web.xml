@@ -149,4 +149,24 @@
     <servlet-name>BookHostel</servlet-name>
     <url-pattern>/BookHostel</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>BookingList</display-name>
+    <servlet-name>BookingList</servlet-name>
+    <servlet-class>stud_dashboard.BookingList</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BookingList</servlet-name>
+    <url-pattern>/BookingList</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>CancelBooking</display-name>
+    <servlet-name>CancelBooking</servlet-name>
+    <servlet-class>stud_dashboard.CancelBooking</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CancelBooking</servlet-name>
+    <url-pattern>/CancelBooking</url-pattern>
+  </servlet-mapping>
 </web-app>
