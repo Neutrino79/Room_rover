@@ -119,7 +119,7 @@
       margin: 0;
     }
     .popup-content {
-        max-height: 520px; /* Adjust the maximum height as needed */
+     max-height: 520px; /* Adjust the maximum height as needed */
     overflow-y: auto;
     padding: 20px;
     box-sizing: border-box;
@@ -164,7 +164,9 @@
       width: 12px;
     }
     
-	.hostellist{
+   
+		
+	.hostellist, .Bookingrequests{
 		margin-left: 25px;
 		height: 250px;
 		width: 700px;
@@ -173,6 +175,9 @@
 		border-right: none;
       position: absolute;
       overflow: auto;
+	}
+	 .Bookingrequests{
+		height: 500px;
 	}
 	/* Add these styles to your existing CSS */
 
@@ -225,8 +230,29 @@
   <div class="left">
     <div class="leftTitle">
       <h2>Booking requests</h2>
+      <div class="Bookingrequests">
+	
+    <table id="hostels-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th> Stud. Name</th>
+                <th>Hostel name</th>
+                <th>Gender</th>
+                <th>phone no.</th>
+               <th style="text-align: center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="request-list">
+            <!-- Dynamic list items will be added here -->
+        </tbody>
+    </table>
+</div>
     </div>
   </div>
+  
+  
+  
   <div id="popupMessage" class="popup-message">
   Saved successfully!
   </div>

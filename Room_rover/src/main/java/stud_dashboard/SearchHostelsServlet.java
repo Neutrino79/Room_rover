@@ -41,7 +41,7 @@ public class SearchHostelsServlet extends HttpServlet {
             conn = DBConn.getConnection();
 
             // Base query to retrieve matching hostels based on user input
-            String searchQuery = "SELECT * FROM hostels WHERE status = 'live'";
+            String searchQuery = "SELECT * FROM hostels WHERE status = 'live' && Is_full=0";
 
             // Add conditions based on user input (modify as needed)
             String hostelName = request.getParameter("searchInput");
@@ -50,6 +50,7 @@ public class SearchHostelsServlet extends HttpServlet {
             System.out.println("name="+hostelName);
             System.out.println("loc="+location);
             System.out.println("price ="+priceRange);
+            
 
             // Set parameters based on user input
             int parameterIndex = 1;
@@ -87,13 +88,44 @@ public class SearchHostelsServlet extends HttpServlet {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
+/*
+            int total_rooms = resultSet.getInt("total_rooms");
+            String type = resultSet.getString("room_type");
+            int room_type;
+            int occupied = resultSet.getInt("occupied");
+            switch (type) {
+                case "Single":
+                    room_type = 1;
+                    break;
+                case "2-sharing":
+                    room_type = 2;
+                    break;
+                case "3-sharing":
+                    room_type = 3;
+                    break;
+                case "4-sharing":
+                    room_type = 4;
+                    break;
+                default:
+                    room_type = 0;
+            }
+
+            int remainingSpace = (total_rooms * room_type) - occupied;
+            */
+            int remainingSpace=12;
             // Process the result set and build JSON array
+            
+            
+            
             JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
             while (resultSet.next()) {
                 // Add hostel details to the JSON array
                 jsonArrayBuilder.add(Json.createObjectBuilder()
+                		.add("hostelId", resultSet.getInt("hostel_id"))
                         .add("hostelName", resultSet.getString("hostel_name"))
-                        .add("location", resultSet.getString("location"))
+                        .add("location", resultSet.getString("location") + " - " + resultSet.getString("address"))
+                        .add("remainingSpace", remainingSpace)
+                        .add("roomType", resultSet.getString("room_type"))
                         .add("price", resultSet.getDouble("price"))
                         // Add more properties as needed
                 );

@@ -109,4 +109,24 @@
     <servlet-name>SearchHostelsServlet</servlet-name>
     <url-pattern>/SearchHostelsServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>fetchStudentDetails</display-name>
+    <servlet-name>fetchStudentDetails</servlet-name>
+    <servlet-class>stud_dashboard.fetchStudentDetails</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fetchStudentDetails</servlet-name>
+    <url-pattern>/fetchStudentDetails</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>RetriveHostel</display-name>
+    <servlet-name>RetriveHostel</servlet-name>
+    <servlet-class>stud_dashboard.RetriveHostel</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RetriveHostel</servlet-name>
+    <url-pattern>/RetriveHostel</url-pattern>
+  </servlet-mapping>
 </web-app>

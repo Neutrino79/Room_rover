@@ -85,7 +85,7 @@
       vertical-align: top; /* Maintain top alignment */
     }
 
-    .rightTitle {
+    .rightTitle, .rightBottom{
       text-align: center;
     }
     
@@ -136,7 +136,107 @@
 #hostels-list tr:not(:last-child) {
     border-bottom: 2px solid #ddd;
 }
+
+
+
+.popup, .popsetting {
+      display: none;
+    position: fixed;
+    top: 49%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 950px;
+    height: 600px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #fff;
+    z-index: 100;
+    position: fixed;
+    }
+    .popup-header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+    }
+    .popup-header h2 {
+      margin: 0;
+    }
+    .popup-content {
+        max-height: 520px; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    }
+    .popup-footer {
+     position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    }
+    .popup-footer button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+    
+    
+    .matchingHostelsSection, .yourbookingSection{
+		margin-left: 25px;
+		height: 470px;
+		width: 700px;
+		border: 2px solid rgb(0, 14, 0);	
+		border-left: none;
+		border-right: none;
+		border-top: none;
+      position: absolute;
+      overflow: auto;
+      
+	}
+	.yourbookingSection{
+		margin-top: -20px;
+		height: 250px;
+		}
+		
+		.amenities-list {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      max-width: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 5px;
+      margin-left: 350px;
+    }
+    .amenities-list label {
+      display: block;
+      margin: 2px 0;
+      border: 1px solid #ddd;
+      padding: 5px;
+      font-size: 14px;
+    }
+    .amenities-list input[type="checkbox"] {
+      margin-right: 10px;
+      height: 12px;
+      width: 12px;
+    }
+		
+	#hostels-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+	    
+    
+    
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <div class="header">
@@ -144,9 +244,59 @@
       <div class="Title"><h1>Welcome to Student Dashboard</h1></div>
       <div class="profile">
         <img src="profile_image.jpg" alt="Profile Image">
+        <button class="settings-button" onclick="showpopsetting()">
+      <i class="fas fa-cog"></i>
+    </button>
       </div>
     </div>
   </div>
+  
+  
+  
+  <div id="popupsetting" class="popsetting">
+    <div class="popup-header">
+        <h2>Students Details</h2>
+    </div>
+    <div class="popup-content">
+        <!-- Hostel booking form goes here -->
+        <label for="studentName">Name: </label>
+        <input type="text" id="studentName" name="studentName" readonly ><br><br>
+
+        <label for="studentEmail">Your Email:</label>
+        <input type="email" id="studentEmail" name="studentEmail" readonly ><br><br>
+
+        <label for="studaddr">Address:</label>
+        <input type="text" id="studaddr" name="studaddr" required><br><br>
+
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" readonly ><br><br>
+
+        <label for="aadhar">Aadhar Number:</label>
+        <input type="text" id="aadhar" name="aadhar" required><br><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" readonly ><br><br>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <label for="collegeId">College ID:</label>
+        <input type="text" id="collegeId" name="collegeId" required><br><br>
+
+        <!-- Add other necessary fields for booking -->
+
+    </div>
+    <div class="popup-footer">
+        <button id="save" onclick="updatestuddetails()">Save</button>
+        <button id="cancel" onclick="closepopsetting()">Cancel</button>
+    </div>
+</div>
+
+
   <div class="left">
     <div class="leftTitle">
       <h2>Search Hostels</h2>
@@ -173,7 +323,7 @@
 
     <button onclick="searchHostels()">Search</button>
     <!-- Display the matching hostels in this section of your UI -->
-    <div id="matchingHostelsSection">
+    <div class="matchingHostelsSection">
     <input type="hidden" id="hostelIdforfill" name="hostelId" value="" />
     <table id="hostels-table">
         <thead>
@@ -192,13 +342,117 @@
         </tbody>
     </table>
 </div>
+<!-- Update the existing HTML form in the book hostel popup section -->
+<div id="bookHostelPopup" class="popup">
+	<input type="hidden" id="hostelId" name="hostelId" value="" />
+    <div class="popup-header">
+        <h2>Book Hostel</h2>
+    </div>
+    <div class="popup-content">
+        <!-- Hostel booking form goes here -->
+        <label for="hostelName">Hostel Name:</label>
+        <input type="text" id="hostelName" name="hostelName" readonly required><br><br>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" readonly required><br><br>
+        
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" readonly required><br><br>
+
+        <label for="landmark">Landmark:</label>
+        <input type="text" id="landmark" name="landmark" readonly required><br><br>
+
+        <label for="roomType">Room Type:</label>
+        <select id="roomType" name="roomType" disabled required>
+            <option value="single">Single</option>
+            <option value="2-sharing">2 Sharing</option>
+            <option value="3-sharing">3 Sharing</option>
+            <option value="4-sharing">4 Sharing</option>
+        </select><br><br>
+
+        <label for="documents">Documents:</label>
+		<button id="viewDocumentButton" onclick="viewDocument()">View Document</button><br><br>
+
+		<label for="bookingDuration">Booking Duration:</label>
+		<select id="bookingDuration" name="bookingDuration" required><br><br>
+   			 <option value="1-month">1 Month</option>
+   			 <option value="3-months">3 Months</option>
+   			 <option value="6-months">6 Months</option>
+   		 <option value="1-year">1 Year</option>
+   		 <!-- Add other duration options as needed -->
+		
+        <label for="amenities">Amenities:</label>
+		<ul class="amenities-list">
+  		<li>
+  		  <label><input type="checkbox" name="amenities[]" value="wifi"> Wi-Fi</label>
+ 		 </li>
+  		<li>
+  		  <label><input type="checkbox" name="amenities[]" value="parking"> Parking</label>
+ 		 </li>
+ 		 <li>
+ 		  <label><input type="checkbox" name="amenities[]" value="ac"> Air Conditioning</label>
+ 		 </li>
+ 		 <li>
+  		  <label><input type="checkbox" name="amenities[]" value="tv"> TV</label>
+ 		 </li>
+ 		 <li>
+ 		   <label><input type="checkbox" name="amenities[]" value="laundry"> Laundry</label>
+ 		 </li>
+		</ul>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" readonly required min="0" oninput="validity.valid||(value='');"><br><br>
+
+
+
+        <label for="gender">Gender Specific:</label>
+        <select id="gender" name="gender" disabled required>
+            <option value="boys">Boys</option>
+            <option value="girls">Girls</option>
+            <option value="both">Both</option>
+        </select><br><br>
+
+        <!-- Add other necessary fields for booking -->
+
+    </div>
+    <div class="popup-footer">
+        <button id="confirmBookingButton" onclick="confirmBooking()">Confirm Booking</button>
+        <button id="cancelBookingButton" onclick="closeBookHostelPopup()">Cancel</button>
+    </div>
+</div>
+
+
+
+
 </div>
   </div>
   <div class="right">
     <div class="rightTitle">
       <h2>Your Bookings</h2>
+      <div class="yourbookingSection">
+    <input type="hidden" id="hostelIdforfill" name="hostelId" value="" />
+    <table id="hostels-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Hostel name</th>
+                <th>Room Type</th>
+                <th>Hostel ID</th>
+                <th>status</th>
+                <th>Price</th>
+                <th style="text-align: center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="booking-list">
+            <!-- Dynamic list items will be added here -->
+        </tbody>
+    </table>
+</div>
     </div>
-    <!-- Add your booking requests here -->
+    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+   <div class="rightBottom">
+      <h2>Payments</h2>
+   </div>
   </div>
   <div class="footer">
     <div class="title">
@@ -206,8 +460,44 @@
   </div>
   
   <body onload="loadLocations()">
-  
+	  
+	  
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
+	  $(document).ready(function () {
+       
+        fetchStudDetails();
+    });
+    
+    function fetchStudDetails() {
+    $.ajax({
+        type: "POST",
+        url: "FetchStuddtls",
+        data: {
+            action: "FetchStuddtls",
+        },
+        success: function (data) {
+            // Handle the data returned from the server
+            $("#studentName").val(data.student_name);
+            $("#studentEmail").val(data.email);
+            $("#studaddr").val(data.address);
+            $("#phone").val(data.phone);
+            $("#aadhar").val(data.aadhar);
+            $("#dob").val(data.dob);
+            $("#gender").val(data.gender);
+            $("#collegeId").val(data.college_id);
+            console.log(data);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching student details:');
+            console.log('Status:', xhr.status);
+            console.log('Status Text:', xhr.statusText);
+            console.log('Response Text:', xhr.responseText);
+        }
+    });
+}
+
+    
     function loadLocations() {
         // Make an AJAX request to GetLocationsServlet with the correct context path
         var xhr = new XMLHttpRequest();
@@ -293,15 +583,133 @@ function displayMatchingHostels(hostels) {
             var priceCell = row.insertCell(5);
             priceCell.innerHTML = hostel.price;
 
+           
             var actionsCell = row.insertCell(6);
-            // Add actions content here if needed
+                  // Add "Book" button
+                  var bookButton = document.createElement("button");
+        bookButton.innerHTML = "Book";
+
+        // Create a function to handle the click event with the captured hostelId
+        function bookButtonClickHandler(id) {
+            return function () {
+                // Call a function to handle booking for this hostel
+                showBookHostelPopup();
+
+                // Call the retrieveHostel function with the captured hostel ID
+                retrieveHostel(id);
+            };
         }
+
+        // Get the hostel ID associated with this button
+        var hostelId = hostel.hostelId;
+
+        // Attach the function to the onclick event
+        bookButton.onclick = bookButtonClickHandler(hostelId);
+
+        actionsCell.appendChild(bookButton);
+        // Add actions content here if needed
+    }
     } else {
         // Display a message if no matching hostels found
         hostelsList.innerHTML = "<tr><td colspan='7'>No matching hostels found.</td></tr>";
     }
 }
 
+
+function retrieveHostel(hostelId){
+	console.log("hostel id="+hostelId);
+	
+	$.ajax({
+        type: "POST",
+        url: "Prefill",
+        data: {
+            action: "Prefill",
+            hostelIdToPrefill: hostelId
+        },
+        success: function (data) {
+            console.log("Response Data:", data);
+            try {
+                // Assuming the servlet returns JSON data
+                // Directly access the properties of the data object
+                var hostel = data;
+
+                // Set the values in the form fields for prefilling
+                document.getElementById('hostelName').value = hostel.hostelName;
+                document.getElementById('location').value = hostel.location;
+                document.getElementById('price').value = hostel.price;
+                document.getElementById('roomType').value = hostel.roomType;
+                
+                
+                document.getElementById('address').value = hostel.address;
+                document.getElementById('landmark').value = hostel.landmark;
+                
+				document.getElementById('gender').value = hostel.gender;
+
+               
+				var amenities = hostel.amenitiesString.split(", ");
+                amenities.forEach(function (amenity) {
+                    $('input[name="amenities[]"][value="' + amenity + '"]').prop('checked', true);
+                });
+
+
+                // Load the document path and set it in the file input field
+                var documentPath = hostel.documentPath;
+                if (documentPath) {
+                    // Create a new file input element
+                    var newFileInput = document.createElement('input');
+                    newFileInput.type = 'file';
+                    newFileInput.id = 'documents';
+
+                    // Replace the existing file input with the new one
+                    var existingFileInput = document.getElementById('documents');
+                    existingFileInput.parentNode.replaceChild(newFileInput, existingFileInput);
+
+                    // Show the view button
+                    document.getElementById('viewDocumentButton').style.display = "inline";
+                }
+
+                // Check and set amenities checkboxes
+                
+
+                // Show the popup
+                bookHostelPopup();
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching data:", error);
+        }
+    });
+}
+
+function showBookHostelPopup() {
+        var popup = document.getElementById("bookHostelPopup");
+        popup.style.display = "block";
+    }
+
+    function closeBookHostelPopup() {
+        var popup = document.getElementById("bookHostelPopup");
+        popup.style.display = "none";
+    }
+   function showpopsetting() {
+        var popup = document.getElementById("popupsetting");
+        popup.style.display = "block";
+        fetchStudDetails();
+    }
+
+    function closepopsetting() {
+        var popup = document.getElementById("popupsetting");
+        popup.style.display = "none";
+    }
+
+    function confirmBooking() {
+        // Implement your booking logic here
+        // You may want to make an AJAX request to the server to process the booking
+        // After successful booking, you can show a success message or update the UI accordingly
+        showPopupMessage("Booking confirmed!");
+        closeBookHostelPopup(); // Close the popup after booking confirmation
+    }
 </script>
   
   
