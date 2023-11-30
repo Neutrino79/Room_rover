@@ -36,7 +36,7 @@ public class fetchStudentDetails extends HttpServlet {
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        int ID = (int) session.getAttribute("ID");
+        int ID = (int) session.getAttribute("StudID");
  
 
         Connection conn = null;

@@ -33,7 +33,7 @@ public class UpdtStudServlet extends HttpServlet {
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
-        int ID = (int) session.getAttribute("ID");
+        int ID = (int) session.getAttribute("StudID");
 
         // Collect data from the AJAX request
         String studaddr = request.getParameter("studaddr");

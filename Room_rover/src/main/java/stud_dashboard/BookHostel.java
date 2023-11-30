@@ -33,7 +33,7 @@ public class BookHostel extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         HttpSession session = request.getSession();
-        int studId = (int) session.getAttribute("ID");
+        int studId = (int) session.getAttribute("StudID");
          System.out.println("In the Booking");
         int hostelId = Integer.parseInt(request.getParameter("hostelId"));
         // bookingTime = request.getParameter("bookingTime");

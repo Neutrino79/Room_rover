@@ -487,6 +487,7 @@
   function loadBookings(callback) {
     $.ajax({
         url: 'FetchBooking',
+        data: { action: 'student' },
         type: 'POST',
         dataType: 'json',
         success: function (data) {

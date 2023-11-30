@@ -80,8 +80,15 @@ public class login extends HttpServlet {
                             out.println("<script>showSuccessAnimation();</script>");// JavaScript to show success animation
                             HttpSession session = request.getSession();
                             session.setAttribute("email", email);
-                            
+                            if ("student".equals(role)) 
+                            {
+                            	session.setAttribute("StudID", ID);
+
+                            } 
+                            else 
+                            {
                             session.setAttribute("ID", ID);
+                            }
 
                             if("student".equals(role))
                             		{

@@ -16,65 +16,69 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.ConnInit.DBConn;
 
 @WebServlet("/FetchBooking")
 public class BookingList extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-  
-    public BookingList() {
-        super();
-        // TODO Auto-generated constructor stub
+    // ... (existing code)
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	HttpSession session = request.getSession();
+    	String action = request.getParameter("action");
+    	int studentID=0;
+    	if ("student".equals(action)) {
+    		studentID= (int) session.getAttribute("StudID");
+        } 
+        
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        Connection conn = null;
+        conn = DBConn.getConnection();
+
+        try {
+            conn = DBConn.getConnection();
+            String sql;
+
+            if ("owner".equals(action)) {
+                // If student ID is null, fetch bookings for all students
+                sql = "SELECT b.*, s.student_name, s.gender, s.phone FROM Booking b " +
+                        "JOIN Students s ON b.stud_id = s.student_id";
+            } else {
+                // If student ID is present, fetch bookings for that student
+                sql = "SELECT b.*, s.student_name, s.gender, s.phone FROM Booking b " +
+                        "JOIN Students s ON b.stud_id = s.student_id " +
+                        "WHERE b.stud_id = ?";
+            }
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+
+            if("student".equals(action)) {
+                // If student ID is present, set the parameter
+                statement.setInt(1, studentID);
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+
+            // Convert result set to JSON
+            out.print(resultSetToJSON(resultSet));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close the database connection
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            out.close();
+        }
     }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		HttpSession session = request.getSession();
-        int ID = (int) session.getAttribute("ID");
-    	response.setContentType("application/json");
-    	PrintWriter out = response.getWriter();
-    	 Connection conn = null;
-    	 conn=DBConn.getConnection();
-    	 
-    	 try 
-         {            
-             String sql = "select * from Booking where stud_id ="+ID;
-             PreparedStatement statement = conn.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery();
-            
-             // Convert result set to JSON
-             out.print(resultSetToJSON(resultSet));
-         } 
-         catch (SQLException e) 
-         {
-             e.printStackTrace();
-         }
-         finally 
-         {
-             // Close the database connection
-             if (conn != null) 
-             {
-                 try 
-                 {
-                     conn.close();
-                 }
-                 catch (SQLException e)
-                 {
-                     e.printStackTrace();
-                 }
-             }
-             out.close();
-         }
-		
-	}
-	
-	private String resultSetToJSON(ResultSet resultSet) throws SQLException {
+    private String resultSetToJSON(ResultSet resultSet) throws SQLException {
         StringBuilder json = new StringBuilder("[");
         boolean first = true;
         while (resultSet.next()) {
@@ -92,6 +96,11 @@ public class BookingList extends HttpServlet {
             String startDate = resultSet.getString("start_date");
             String endDate = resultSet.getString("end_date");
             String bookDuration = resultSet.getString("book_duration");
+
+            // Student-specific data
+            String studentName = resultSet.getString("student_name");
+            String gender = resultSet.getString("gender");
+            String phone = resultSet.getString("phone");
 
             // Fetch hostel details
             Map<String, String> hostelDetails = getHostelDetails(hostelId);
@@ -111,7 +120,10 @@ public class BookingList extends HttpServlet {
             json.append("\"payment_time\":\"").append(paymentTime).append("\",");
             json.append("\"start_date\":\"").append(startDate).append("\",");
             json.append("\"end_date\":\"").append(endDate).append("\",");
-            json.append("\"book_duration\":\"").append(bookDuration).append("\"");
+            json.append("\"book_duration\":\"").append(bookDuration).append("\",");
+            json.append("\"student_name\":\"").append(studentName).append("\",");
+            json.append("\"gender\":\"").append(gender).append("\",");
+            json.append("\"phone\":\"").append(phone).append("\"");
             json.append("}");
 
             first = false;
@@ -119,7 +131,12 @@ public class BookingList extends HttpServlet {
         json.append("]");
         System.out.println("JSON Response: " + json.toString());
         return json.toString();
+       
     }
+
+    // ... (existing code)
+
+
 
     private Map<String, String> getHostelDetails(int hostelId) {
         Map<String, String> hostelDetails = new HashMap<>();

@@ -188,13 +188,13 @@
 }
 
 /* Style for the table */
-#hostels-table {
+#hostels-table,#requests-table {
     width: 100%;
     border-collapse: collapse;
 }
 
 /* Style for table header cells */
-#hostels-table th {
+#hostels-table th,#requests-table th {
     padding: 12px;
     background-color: #333;
     color: #fff;
@@ -205,13 +205,13 @@
 }
 
 /* Style for table cells */
-#hostels-table td {
+#hostels-table td,#requests-table td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
 
 /* Style for the separating line between items */
-#hostels-list tr:not(:last-child) {
+#hostels-list tr:not(:last-child),#request-list tr:not(:last-child) {
     border-bottom: 2px solid #ddd;
 }
 
@@ -232,7 +232,7 @@
       <h2>Booking requests</h2>
       <div class="Bookingrequests">
 	
-    <table id="hostels-table">
+    <table id="requests-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -383,8 +383,70 @@
   <script>
 	  
 	  $(document).ready(function () {
+         
+            loadRequests();
             loadHostels();
         });
+        
+        
+     function loadRequests(callback){
+		 $.ajax({
+        url: 'FetchBooking',
+        data: { action: 'owner' },
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        success: function (data) {
+            // Clear existing table rows
+            $('#request-list').empty();
+            console.log('Response Data:', data);
+
+            // Iterate over the data and add bookings to the table
+            for (var i = 0; i < data.length; i++) {
+                var req = data[i];
+                var row = $('<tr>');
+
+                // Add data to the table cells
+                row.append('<td>' + req.booking_id + '</td>');
+                row.append('<td>' + req.student_name + '</td>');
+                row.append('<td>' + req.hostel_name+ '</td>');
+                row.append('<td>' + req.gender + '</td>');
+                row.append('<td>' + req.phone + '</td>');
+
+                // Add buttons
+                var actionsCell = $('<td>');
+                if (req.status === 'pending') {
+                    var cancelButton = $('<button>').text('Cancel')
+                        .attr('type', 'button')
+                        .attr('data-booking-id', req.booking_id)
+                        .click(function () {
+                            var bookingId = $(this).data('booking-id');
+                            cancelBooking(bookingId);
+                        });
+                    actionsCell.append(cancelButton);
+                }
+
+                actionsCell.css('text-align', 'center');
+                row.append(actionsCell);
+
+                // Append the row to the table
+                $('#request-list').append(row);
+            }
+
+            if (callback) {
+                callback();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", xhr.responseText);
+            console.error("Status:", status);
+            console.error("Error:", error);
+            console.error("URL:", this.url);
+        }
+    });
+}
+        
+        
         
 	  function loadHostels(callback) {
     $.ajax({
@@ -458,6 +520,10 @@
 
     });
 	}
+	
+	
+	
+	
 
 
  
