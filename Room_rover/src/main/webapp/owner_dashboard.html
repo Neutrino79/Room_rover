@@ -370,13 +370,7 @@
   
   
   
-  
-  
-  
-  
-  
-  
-
+ 
   
   
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -416,14 +410,17 @@
                 // Add buttons
                 var actionsCell = $('<td>');
                 if (req.status === 'pending') {
-                    var cancelButton = $('<button>').text('Cancel')
-                        .attr('type', 'button')
-                        .attr('data-booking-id', req.booking_id)
-                        .click(function () {
-                            var bookingId = $(this).data('booking-id');
-                            cancelBooking(bookingId);
-                        });
-                    actionsCell.append(cancelButton);
+                   var viewButton = $('<button>').text('View')
+   					 .attr('type', 'button')
+    				.attr('data-booking-id', req.booking_id)
+   					 .click(function () {
+      				  var bookingId = $(this).data('booking-id');
+      				  // Add your view function here or redirect to a view page
+     			   viewBooking(bookingId);
+  							  });
+
+				actionsCell.append(viewButton);
+
                 }
 
                 actionsCell.css('text-align', 'center');
