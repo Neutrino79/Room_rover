@@ -14,7 +14,7 @@ public class DBConn
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Room_rover", "root", "admin123");
         } 
-        catch (ClassNotFoundException e) 
+        catch (ClassNotFoundException e)
         {
             e.printStackTrace();
             throw new RuntimeException("Failed to load MySQL JDBC driver");
