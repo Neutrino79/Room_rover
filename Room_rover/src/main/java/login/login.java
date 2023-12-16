@@ -1,6 +1,8 @@
 package login;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import jakarta.servlet.http.HttpSession;
+
 
 
 import com.ConnInit.DBConn;
@@ -49,6 +52,12 @@ public class login extends HttpServlet {
                         userTable = "HostelOwners";
                         IDcol="owner_id";
                     }
+                    else if("admin".equals(role))
+                    {
+                    	userTable = "admins";
+                        IDcol="admin_id";
+                    }
+                    
                     else 
                     {
                         // Handle invalid role
@@ -98,6 +107,11 @@ public class login extends HttpServlet {
                             {
                             	out.println("<script>window.location.replace('/Room_rover/owner_dashboard.html');</script>");
                             }
+                            else if ("Admin".equals(role)) {
+                                RequestDispatcher dispatcher = request.getRequestDispatcher("/Room_rover/adminPanel.jsp");
+                                dispatcher.forward(request, response);
+                            }
+
                         } else {
                             // Login failed
                             out.println("Invalid email or password");

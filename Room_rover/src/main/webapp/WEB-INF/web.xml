@@ -189,4 +189,44 @@
     <servlet-name>AcceptRejectBookingServlet</servlet-name>
     <url-pattern>/AcceptRejectBookingServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>HostelManagementService</display-name>
+    <servlet-name>HostelManagementService</servlet-name>
+    <servlet-class>admin.HostelManagementService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HostelManagementService</servlet-name>
+    <url-pattern>/HostelManagementService</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>feedback</display-name>
+    <servlet-name>feedback</servlet-name>
+    <servlet-class>admin.feedback</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>feedback</servlet-name>
+    <url-pattern>/feedback</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ChangeStatusServlet1</display-name>
+    <servlet-name>ChangeStatusServlet1</servlet-name>
+    <servlet-class>admin.ChangeStatusServlet1</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ChangeStatusServlet1</servlet-name>
+    <url-pattern>/ChangeStatusServlet1</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>hostel</display-name>
+    <servlet-name>hostel</servlet-name>
+    <servlet-class>admin.hostel</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>hostel</servlet-name>
+    <url-pattern>/hostel</url-pattern>
+  </servlet-mapping>
 </web-app>
