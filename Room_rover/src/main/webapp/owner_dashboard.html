@@ -123,6 +123,7 @@
     overflow-y: auto;
     padding: 20px;
     box-sizing: border-box;
+    
     }
     .popup-footer {
      position: absolute;
@@ -180,6 +181,69 @@
 		height: 500px;
 	}
 	/* Add these styles to your existing CSS */
+	
+/* Left section styling */
+/* Left section styling */
+/* Left section styling */
+.left-section {
+    float: left;
+    width: 50%; /* Adjust the width as needed */
+    border: 2px solid #ccc; /* Thicken the border */
+    padding: 20px; /* Increase padding for more space */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Align controls in one line in left section with increased padding */
+.left-section p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px; /* Adjust the margin to reduce space */
+}
+
+/* Right section styling */
+.right-section {
+    float: right;
+    width: 50%; /* Adjust the width as needed */
+    border: 2px solid #ccc; /* Thicken the border */
+    padding: 20px; /* Increase padding for more space */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Align controls in one line in right section with increased padding */
+.right-section p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px; /* Adjust the margin to reduce space */
+}
+
+/* Bottom section styling */
+.bottom-section {
+    clear: both;
+    width: 100%;
+    margin-top: 40px; /* Add margin for separation */
+    border: 2px solid #ccc;
+    border-top: 2px solid #ccc; /* Thicken the border */
+    padding: 20px; /* Increase padding for more space */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Align controls in one line in bottom section with increased padding */
+.bottom-section p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px; /* Adjust the margin to reduce space */
+}
+
+
 
 /* Style for the table container */
 #hostels-table-container {
@@ -248,6 +312,48 @@
         </tbody>
     </table>
 </div>
+		<div id="showrequestPopup" class="popup">
+			<div class="popup-header">
+            <h2>Booking Request</h2>
+          </div>
+          <!-- Inside the popup content -->
+          <!-- Inside the popup content -->
+<div class="popup-content">
+    <div class="left-section">
+        <h3>Student Information</h3>
+        <p>Student ID: <span id="popup-student-id" readonly></span></p>
+        <p>Student Name: <span id="popup-student-name" readonly></span></p>
+        <p>Student Email: <span id="popup-student-email" readonly></span></p>
+        <p>Student Phone: <span id="popup-student-phone" readonly></span></p>
+        <p>Student Gender: <span id="popup-student-gender" readonly></span></p>
+    </div>
+
+    <div class="right-section">
+        <h3>Hostel Information</h3>
+        <p>Hostel ID: <span id="popup-hostel-id" readonly></span></p>
+        <p>Hostel Name: <span id="popup-hostel-name" readonly></span></p>
+        <p>Hostel Location: <span id="popup-hostel-location" readonly></span></p>
+        <p>Hostel Price: <span id="popup-hostel-price" readonly></span></p>
+        <p>Hostel Gender: <span id="popup-hostel-gender" readonly></span></p>
+    </div>
+
+    <div class="bottom-section">
+        <h3>Booking Details</h3>
+        <p>Booking ID: <span id="popup-booking-id" readonly></span></p>
+        <p>Booking Time: <span id="popup-booking-time" readonly></span></p>
+        <p>Start Date: <span id="popup-start-date" readonly></span></p>
+        <p>End Date: <span id="popup-end-date" readonly></span></p>
+        <p>Book Duration: <span id="popup-book-duration" readonly></span></p>
+    </div>
+</div>
+
+
+           <div class="popup-footer">
+            <button id="acceptrequest" onclick="acceptbooking()">Accept</button>
+            <button id="rejectrequest" onclick="rejectbooking()">Reject</button>
+            <button id="exitHostelButton" onclick="closerequestPopup()">Exit</button>
+          </div>     
+		</div>
     </div>
   </div>
   
@@ -416,8 +522,10 @@
    					 .click(function () {
       				  var bookingId = $(this).data('booking-id');
       				  // Add your view function here or redirect to a view page
-     			   viewBooking(bookingId);
-  							  });
+      				  showrequestPopup();
+     			   	  viewRequest(bookingId);
+     			   	  
+  					});
 
 				actionsCell.append(viewButton);
 
@@ -425,7 +533,7 @@
 
                 actionsCell.css('text-align', 'center');
                 row.append(actionsCell);
-
+				
                 // Append the row to the table
                 $('#request-list').append(row);
             }
@@ -443,6 +551,66 @@
     });
 }
         
+        
+        //fetchin ght request detailed data 
+       function viewRequest(bookingId) {
+    console.log("you clicked " + bookingId);
+
+    // Make an AJAX request to fetch detailed information
+    $.ajax({
+        url: 'FetchRequestInfo',
+        data: { bookingId: bookingId },
+        type: 'POST',
+        dataType: 'json',
+        success: function (detailedData) {
+            // Use detailedData to populate the show request popup
+            console.log('Detailed Information:', detailedData);
+
+            // Access the elements in the popup and set their values
+            $('#popup-booking-id').text(detailedData.booking_id);
+            $('#popup-booking-time').text(detailedData.booking_time);
+            $('#popup-start-date').text(detailedData.start_date);
+            $('#popup-end-date').text(detailedData.end_date);
+            $('#popup-book-duration').text(detailedData.book_duration);
+
+            // Student Information
+            $('#popup-student-id').text(detailedData.student.student_id);
+            $('#popup-student-name').text(detailedData.student.student_name);
+            $('#popup-student-email').text(detailedData.student.email);
+            $('#popup-student-phone').text(detailedData.student.phone);
+            $('#popup-student-gender').text(detailedData.student.gender);
+
+            // Hostel Information
+            $('#popup-hostel-id').text(detailedData.hostel.hostel_id);
+            $('#popup-hostel-name').text(detailedData.hostel.hostel_name);
+            $('#popup-hostel-location').text(detailedData.hostel.location);
+            $('#popup-hostel-price').text(detailedData.hostel.price);
+
+            // Compare student gender and hostel gender for hostel type
+            var hostelType = detailedData.student.gender === detailedData.hostel.gender ? 'Same Gender' : 'Mixed Gender';
+            $('#popup-hostel-gender').text(hostelType);
+
+            // Show the popup
+            showRequestPopup();
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", xhr.responseText);
+            console.error("Status:", status);
+            console.error("Error:", error);
+        }
+    });
+}
+
+// Function to show the request popup
+function showRequestPopup() {
+    $('#showrequestPopup').show();
+}
+
+// Function to hide the request popup
+function closeRequestPopup() {
+    $('#showrequestPopup').hide();
+}
+
         
         
 	  function loadHostels(callback) {
@@ -650,6 +818,8 @@
             event.preventDefault();
         }
 
+
+
 	function showUpdateHostelPopup() {
 	document.getElementById('hostelEditMode').value = 'update';
 	var popupHeader = document.querySelector('.popup-header h2');
@@ -664,6 +834,8 @@
      showHostelPopup();
     }
 	
+    
+    
     
     function showAddHostelPopup() {
       document.getElementById('hostelEditMode').value = 'add';
@@ -680,6 +852,16 @@
     }
 
 
+	function showrequestPopup(){
+	  var popup = document.getElementById("showrequestPopup");
+      popup.style.display = "block";
+	}
+	function closerequestPopup() {
+      var popup = document.getElementById("showrequestPopup");
+      popup.style.display = "none";
+      event.preventDefault();
+    }
+	
 
 	function showHostelPopup(){
 	  var popup = document.getElementById("addHostelPopup");

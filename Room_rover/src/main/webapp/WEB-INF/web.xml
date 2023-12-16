@@ -169,4 +169,14 @@
     <servlet-name>CancelBooking</servlet-name>
     <url-pattern>/CancelBooking</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>FetchRequestInfoServlet</display-name>
+    <servlet-name>FetchRequestInfoServlet</servlet-name>
+    <servlet-class>dashboard.FetchRequestInfoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FetchRequestInfoServlet</servlet-name>
+    <url-pattern>/FetchRequestInfoServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
