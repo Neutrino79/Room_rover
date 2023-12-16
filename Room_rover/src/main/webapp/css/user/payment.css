@@ -1,0 +1,54 @@
+/* 
+    Document   : payment
+    Created on : 12 Jan, 2023, 7:45:44 PM
+    Author     : prath
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+
+*{
+  box-sizing: border-box;
+}
+
+body
+{
+    background-color: #e8eaf6;
+}
+ 
+
+.header_div
+{
+    height: 180px;
+    width: 100%;
+    background-color: white;
+    
+}
+
+.image_class
+{
+    margin-left: 1%;
+    height: 100%;
+    width: 5%;
+}
+
+.header_button
+{
+    border-radius: 4px;
+    border: none;
+    color: white;   
+    height: 40px;
+    width: 90px;
+    margin-top: 1%;
+    margin-right: 2%;
+    background-color: #072791!important;
+    font: inherit;
+    float: right;
+}
+
+
+.inlineimage{max-width:470px;margin-right: 8px;margin-left: 10px}.images{display: inline-block;max-width: 98%;height: auto;width: 22%;margin: 1%;left:20px;text-align: center}

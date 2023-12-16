@@ -566,8 +566,10 @@
                         .attr('data-booking-id', booking.booking_id)
                         .click(function () {
                             var bookingId = $(this).data('booking-id');
-                            
-                        });
+                             window.location.href = 'payment.jsp?bookingId=' + encodeURIComponent(bookingId) +
+                                  '&hostelName=' + encodeURIComponent(booking.hostel_name) +
+                                  '&price=' + encodeURIComponent(booking.price);
+     					   });
                       paymentsActionsCell.append(viewPaymentsButton);
                 }
 

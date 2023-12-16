@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="registration_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="11d7f02b-aec6-4bf2-ae20-8c9d575a71d2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     employee_information.`id` AS employee_information_id,
+     employee_information.`name` AS employee_information_name,
+     employee_information.`address` AS employee_information_address,
+     employee_information.`contact` AS employee_information_contact,
+     employee_information.`designation` AS employee_information_designation,
+     employee_information.`salary` AS employee_information_salary,
+     employee_information.`date` AS employee_information_date
+FROM
+     `employee_information` employee_information]]>
+	</queryString>
+	<field name="employee_information_id" class="java.lang.String"/>
+	<field name="employee_information_name" class="java.lang.String"/>
+	<field name="employee_information_address" class="java.lang.String"/>
+	<field name="employee_information_contact" class="java.lang.String"/>
+	<field name="employee_information_designation" class="java.lang.String"/>
+	<field name="employee_information_salary" class="java.lang.String"/>
+	<field name="employee_information_date" class="java.lang.String"/>
+	<group name="employee_information_id">
+		<groupExpression><![CDATA[$F{employee_information_id}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="114" height="20" uuid="22e11b6f-f8cb-468d-b84a-600c367a5def"/>
+				<text><![CDATA[employee_information_id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="114" y="0" width="114" height="20" uuid="d94fffb4-0478-4198-af90-43e5fb609f4f"/>
+				<text><![CDATA[employee_information_name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="228" y="0" width="114" height="20" uuid="4f338ccf-d1b2-4b35-99cb-8f1e74771c59"/>
+				<text><![CDATA[employee_information_address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="342" y="0" width="114" height="20" uuid="6d55787a-7512-43b6-96eb-2a7117e95905"/>
+				<text><![CDATA[employee_information_contact]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="456" y="0" width="114" height="20" uuid="98c2a3e6-61a8-48e2-9490-7c75c86e8957"/>
+				<text><![CDATA[employee_information_designation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="570" y="0" width="114" height="20" uuid="be65f104-8859-4072-8ee0-231e234a6833"/>
+				<text><![CDATA[employee_information_salary]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="684" y="0" width="114" height="20" uuid="723f9ce4-8eda-4bf8-8f9b-679a9542a0fd"/>
+				<text><![CDATA[employee_information_date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="114" height="20" uuid="f8f58345-85ab-4d52-bdba-dc3385793657"/>
+				<textFieldExpression><![CDATA[$F{employee_information_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="0" width="114" height="20" uuid="0d8727f3-d8c2-49da-9d1c-d42e271d8d56"/>
+				<textFieldExpression><![CDATA[$F{employee_information_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="228" y="0" width="114" height="20" uuid="5c86c2d9-29cb-49ac-9f1d-892d5df0092f"/>
+				<textFieldExpression><![CDATA[$F{employee_information_address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="342" y="0" width="114" height="20" uuid="494b904f-c3fc-445c-ac2e-3e7f43dbea6a"/>
+				<textFieldExpression><![CDATA[$F{employee_information_contact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="456" y="0" width="114" height="20" uuid="e484ab66-b9ab-499c-8ace-adc219ec5b88"/>
+				<textFieldExpression><![CDATA[$F{employee_information_designation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="570" y="0" width="114" height="20" uuid="de186266-ea16-463a-9fc6-435686762fb4"/>
+				<textFieldExpression><![CDATA[$F{employee_information_salary}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="684" y="0" width="114" height="20" uuid="0a3037bc-8813-43fe-8a55-dd493bdbece5"/>
+				<textFieldExpression><![CDATA[$F{employee_information_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
