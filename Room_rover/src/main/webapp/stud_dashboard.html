@@ -216,7 +216,7 @@
     }
     
     
-    .matchingHostelsSection, .yourbookingSection{
+    .matchingHostelsSection, .yourbookingSection, .paymentssection{
 		margin-left: 25px;
 		height: 470px;
 		width: 700px;
@@ -232,7 +232,10 @@
 		margin-top: -20px;
 		height: 250px;
 		}
-		
+	.paymentssection{
+		margin-top: -20px;
+		height: 202px
+	}
 		
 		
 	#hostels-table {
@@ -464,6 +467,25 @@
     <br><br><br><br><br><br><br><br><br><br><br><br><br>
    <div class="rightBottom">
       <h2>Payments</h2>
+      <div class="paymentssection">
+   
+    <table id="hostels-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Stud Name</th>
+                <th>hostel ID</th>
+                <th>Hostel name</th>
+                <th>owner phone no</th>
+                <th>Price</th>
+                <th style="text-align: center;">Actions</th>
+            </tr> 
+        </thead>
+        <tbody id="Payments-list">
+            <!-- Dynamic list items will be added here -->
+        </tbody>
+    </table>
+</div>
    </div>
   </div>
   <div class="footer">

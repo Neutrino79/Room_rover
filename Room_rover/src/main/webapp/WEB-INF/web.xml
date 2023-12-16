@@ -179,4 +179,14 @@
     <servlet-name>FetchRequestInfoServlet</servlet-name>
     <url-pattern>/FetchRequestInfoServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>AcceptRejectBookingServlet</display-name>
+    <servlet-name>AcceptRejectBookingServlet</servlet-name>
+    <servlet-class>dashboard.AcceptRejectBookingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AcceptRejectBookingServlet</servlet-name>
+    <url-pattern>/AcceptRejectBookingServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

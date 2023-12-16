@@ -349,10 +349,10 @@
 
 
            <div class="popup-footer">
-            <button id="acceptrequest" onclick="acceptbooking()">Accept</button>
-            <button id="rejectrequest" onclick="rejectbooking()">Reject</button>
-            <button id="exitHostelButton" onclick="closerequestPopup()">Exit</button>
-          </div>     
+   <button id="acceptrequest" onclick="acceptBookingButtonClick()" data-booking-id="" readonly>Accept</button>
+    <button id="rejectrequest" onclick="rejectBookingButtonClick()">Reject</button>
+    <button id="exitHostelButton" onclick="closeRequestPopup()">Exit</button>
+</div>
 		</div>
     </div>
   </div>
@@ -482,15 +482,13 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
 	  
-	  $(document).ready(function () {
-         
-            loadRequests();
-            loadHostels();
-        });
-        
-        
-     function loadRequests(callback){
-		 $.ajax({
+	 $(document).ready(function () {
+    loadRequests();
+    loadHostels();
+});
+
+function loadRequests(callback) {
+    $.ajax({
         url: 'FetchBooking',
         data: { action: 'owner' },
         type: 'POST',
@@ -509,31 +507,33 @@
                 // Add data to the table cells
                 row.append('<td>' + req.booking_id + '</td>');
                 row.append('<td>' + req.student_name + '</td>');
-                row.append('<td>' + req.hostel_name+ '</td>');
+                row.append('<td>' + req.hostel_name + '</td>');
                 row.append('<td>' + req.gender + '</td>');
                 row.append('<td>' + req.phone + '</td>');
 
                 // Add buttons
                 var actionsCell = $('<td>');
                 if (req.status === 'pending') {
-                   var viewButton = $('<button>').text('View')
-   					 .attr('type', 'button')
-    				.attr('data-booking-id', req.booking_id)
-   					 .click(function () {
-      				  var bookingId = $(this).data('booking-id');
-      				  // Add your view function here or redirect to a view page
-      				  showrequestPopup();
-     			   	  viewRequest(bookingId);
-     			   	  
-  					});
+                    var viewButton = $('<button>').text('View')
+                        .attr('type', 'button')
+                        .attr('data-booking-id', req.booking_id)
+                        .click(function () {
+                            var bookingId = $(this).data('booking-id');
+                            // Add your view function here or redirect to a view page
+                            showRequestPopup();
+                            viewRequest(bookingId);
+                        });
 
-				actionsCell.append(viewButton);
-
+                    actionsCell.append(viewButton);
                 }
+                else {
+   				 // Display the status text directly in the cell
+    			actionsCell.text(req.status);
+				}
 
                 actionsCell.css('text-align', 'center');
                 row.append(actionsCell);
-				
+
                 // Append the row to the table
                 $('#request-list').append(row);
             }
@@ -550,6 +550,79 @@
         }
     });
 }
+
+
+function acceptBookingButtonClick() {
+    // Get the bookingId from the data-booking-id attribute
+    console.log("Booking accept button clicked");
+    var bookingId = $('#acceptrequest').attr('data-booking-id');
+    
+    // Call the acceptBooking function with the bookingId
+    acceptBooking(bookingId);
+}
+function rejectBookingButtonClick() {
+    // Get the bookingId from the data-booking-id attribute
+    console.log("Booking reject button clicked");
+    var bookingId = $('#acceptrequest').attr('data-booking-id');
+    
+    // Call the acceptBooking function with the bookingId
+    rejectBooking(bookingId);
+}
+
+
+
+function acceptBooking(bookingId) {
+    // Make an AJAX request to the servlet
+    $.ajax({
+        url: 'AcceptRejectBooking',
+        data: { bookingId: bookingId, action: 'accepted, payment pending' },
+        type: 'POST',
+        dataType: 'text',
+        success: function (response) {
+            console.log(response);
+            // Handle success (e.g., display a message, update UI)
+            alert("Booking accepted successfully");
+            // You can also reload the requests table or perform other actions
+            loadRequests();
+            
+            closerequestPopup();
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", xhr.responseText);
+            console.error("Status:", status);
+            console.error("Error:", error);
+            // Handle error (e.g., display an error message)
+            alert("Failed to accept the booking");
+        }
+    });
+}
+
+function rejectBooking(bookingId) {
+    // Make an AJAX request to the servlet
+    $.ajax({
+        url: 'AcceptRejectBooking',
+        data: { bookingId: bookingId, action: 'reject' },
+        type: 'POST',
+        dataType: 'text',
+        success: function (response) {
+            console.log(response);
+            // Handle success (e.g., display a message, update UI)
+            alert("Booking rejected successfully");
+            // You can also reload the requests table or perform other actions
+            loadRequests();
+            closerequestPopup();
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", xhr.responseText);
+            console.error("Status:", status);
+            console.error("Error:", error);
+            // Handle error (e.g., display an error message)
+            alert("Failed to reject the booking");
+        }
+    });
+}
+
+
         
         
         //fetchin ght request detailed data 
@@ -590,6 +663,9 @@
             var hostelType = detailedData.student.gender === detailedData.hostel.gender ? 'Same Gender' : 'Mixed Gender';
             $('#popup-hostel-gender').text(hostelType);
 
+            // Update the data-booking-id attribute for the "Accept" button
+            $('#acceptrequest').attr('data-booking-id', detailedData.booking_id);
+
             // Show the popup
             showRequestPopup();
         },
@@ -600,6 +676,7 @@
         }
     });
 }
+
 
 // Function to show the request popup
 function showRequestPopup() {
