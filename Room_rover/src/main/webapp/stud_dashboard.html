@@ -479,7 +479,7 @@
                 <th>owner phone no</th>
                 <th>Price</th>
                 <th style="text-align: center;">Actions</th>
-            </tr> 
+            </tr>
         </thead>
         <tbody id="Payments-list">
             <!-- Dynamic list items will be added here -->
@@ -506,7 +506,7 @@
     
     
     
-  function loadBookings(callback) {
+ function loadBookings(callback) {
     $.ajax({
         url: 'FetchBooking',
         data: { action: 'student' },
@@ -515,40 +515,74 @@
         success: function (data) {
             // Clear existing table rows
             $('#booking-list').empty();
+            $('#payments-list').empty(); // Clear payments table rows
+
             console.log('Response Data:', data);
 
-            // Iterate over the data and add bookings to the table
+            // Iterate over the data and add bookings to the tables
             for (var i = 0; i < data.length; i++) {
                 var booking = data[i];
-                var row = $('<tr>');
+                var bookingRow = $('<tr>');
+				var paymentRow =$('<tr>');
 
-                // Add data to the table cells
-                row.append('<td>' + booking.booking_id + '</td>');
-                row.append('<td>' + booking.hostel_name + '</td>');
-                row.append('<td>' + booking.location + '</td>');
-                row.append('<td>' + booking.room_type + '</td>');
-                row.append('<td>' + booking.hostel_id + '</td>');
-                row.append('<td>' + booking.status + '</td>');
-                row.append('<td>' + booking.price + '</td>');
-
-                // Add buttons
-                var actionsCell = $('<td>');
-                if (booking.status === 'pending') {
-                    var cancelButton = $('<button>').text('Cancel')
+                // Add data to the booking table cells
+                bookingRow.append('<td>' + booking.booking_id + '</td>');
+                bookingRow.append('<td>' + booking.hostel_name + '</td>');
+                bookingRow.append('<td>' + booking.location + '</td>');
+                bookingRow.append('<td>' + booking.room_type + '</td>');
+                bookingRow.append('<td>' + booking.hostel_id + '</td>');
+                bookingRow.append('<td>' + booking.status + '</td>');
+                bookingRow.append('<td>' + booking.price + '</td>');
+                
+				if (booking.status === 'accepted, payment pending') 
+				{
+					paymentRow.append('<td>' + booking.booking_id + '</td>');
+                	paymentRow.append('<td>' + booking.student_name + '</td>');
+               		 paymentRow.append('<td>' + booking.hostel_id+ '</td>');
+                	paymentRow.append('<td>' + booking.hostel_name + '</td>');
+                	paymentRow.append('<td>' + booking.phone + '</td>');
+               		 paymentRow.append('<td>' + booking.price + '</td>');
+				}
+                // Add buttons to the booking table
+                var bookingActionsCell = $('<td>');					
+                if (booking.status === 'pending') 
+                {
+                    var cancelBookingButton = $('<button>').text('Cancel')
                         .attr('type', 'button')
                         .attr('data-booking-id', booking.booking_id)
                         .click(function () {
                             var bookingId = $(this).data('booking-id');
                             cancelBooking(bookingId);
                         });
-                    actionsCell.append(cancelButton);
+                    bookingActionsCell.append(cancelBookingButton);
+                } 
+                
+                
+                else if(booking.status === 'accepted, payment pending') 
+                {
+					var paymentsActionsCell = $('<td>');
+                    var viewPaymentsButton = $('<button>').text('Pay')
+                        .attr('type', 'button')
+                        .attr('data-booking-id', booking.booking_id)
+                        .click(function () {
+                            var bookingId = $(this).data('booking-id');
+                            
+                        });
+                      paymentsActionsCell.append(viewPaymentsButton);
                 }
 
-                actionsCell.css('text-align', 'center');
-                row.append(actionsCell);
 
-                // Append the row to the table
-                $('#booking-list').append(row);
+                bookingActionsCell.css('text-align', 'center');
+                bookingRow.append(bookingActionsCell);
+                $('#booking-list').append(bookingRow);
+                
+                if(booking.status === 'accepted, payment pending') 
+                {
+					paymentsActionsCell.css('text-align', 'center');
+					paymentRow.append(paymentsActionsCell);
+					$('#Payments-list').append(paymentRow);
+				}
+  
             }
 
             if (callback) {
@@ -563,6 +597,8 @@
         }
     });
 }
+
+
 
 	
 	
